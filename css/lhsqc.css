@@ -996,6 +996,10 @@ padding-right: 6px;
     color: #b0ccbb;
 }
 
+.Roster  {
+    padding: 10px;
+}
+
 .rosterElm {
     color: rgb(2, 168, 24);
     border: 1px solid rgb(2, 168, 24);
@@ -1004,7 +1008,16 @@ padding-right: 6px;
     display: block; /* Ensure it displays as a block element */
 }
 
+.rosterElm p {
+    color: #27ae60;
+}
+
+
 .scratch {
     color: red;
     border: 1px solid red;
+}
+
+.Scratched {
+    padding: 10px;
 }

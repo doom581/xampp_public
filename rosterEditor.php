@@ -37,8 +37,8 @@ $playersPositions = ['LW', 'C', 'RW', 'DD'];
     <div class="row ">
 
 
-        <div class="col-9 m-0" id="Lines">
-            <div class="card h-100">
+        <div class="col-9 m-0 p-0" id="Lines">
+            <div class="card h-100 mt-1 mx-1">
                 <div class="card-header">Lines</div>
                 <div class="card-body">
                     
@@ -201,16 +201,16 @@ $playersPositions = ['LW', 'C', 'RW', 'DD'];
 
 
 
-        <div class="col-3 m-0">
-            <div class="card text-center h-75 mb-1 ">
+        <div class="col-3 m-0 p-0">
+            <div class="card text-center h-75 mb-1 mx-0 mt-1 ">
                 <div class="card-header">Healthy</div>
-                <div class="card-body m-0 p-1" id="Roster">
+                <div class="card-body m-0 p-1 Roster" id="Roster">
                     <!--     ul li   list created from JS-->
                 </div>
             </div>
             <div class="card text-center ">
                 <div class="card-header">Scratch</div>
-                <div class="card-body m-0 p-3 " id="Scratched"></div>
+                <div class="card-body m-0 p-3 Scratched" id="Scratched"></div>
             </div>
         </div>
 
