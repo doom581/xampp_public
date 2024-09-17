@@ -1016,8 +1016,14 @@ padding-right: 6px;
 .scratch {
     color: red;
     border: 1px solid red;
+    padding: 5px;
+    margin-bottom: 2px;
+    display: block; /* Ensure it displays as a block element */
 }
 
 .Scratched {
-    padding: 10px;
+    padding: 0px;
+}
+.Scratched p {
+    color: red;
 }

@@ -59,7 +59,7 @@ function createDraggablePlayerDiv(playerName) {
     // Add dragstart event listener
     contenant.addEventListener('dragstart', function (event) {
         event.dataTransfer.setData('playerId', playerName);
-        event.dataTransfer.setData('fromZone', 'roster');
+        event.dataTransfer.setData('fromZone', 'Roster');
         event.dataTransfer.setData('elementId', contenant.id);
     });
 
@@ -75,44 +75,83 @@ function allowDrop(event) {
 }
 
 function handleDropOnContainer(event) {
-    event.preventDefault();
-    let playerId = event.dataTransfer.getData('playerId');
-    let fromZone = event.dataTransfer.getData('fromZone');
-    let elementId = event.dataTransfer.getData('elementId');
-    let playerElement = document.getElementById(elementId);
+    event.preventDefault()
+  
+    let target = event.currentTarget;
+    let playerName = event.dataTransfer.getData('playerId')
+    let rosterPlayerDiv = document.getElementById(playerName)
+    let fromZone = event.dataTransfer.getData('fromZone')
+    let playerDivId = event.dataTransfer.getData('elementId')
+    let playerDiv = document.getElementById(playerDivId)
+ 
 
-    let currentZone = event.currentTarget;
-    let currentPlayerInZone = currentZone.querySelector('.card-text').innerHTML;
+    let currentPlayerInZone = target.querySelector('.card-text').innerHTML;
 
     if (fromZone === 'roster-container') {
-        currentZone.querySelector('.card-text').innerHTML = playerId;
-        currentZone.style.border = "2px solid green";
-        if (playerElement) {
-            playerElement.style.border = "1px solid black";
-            playerElement.setAttribute('draggable', false);
-            playerElement.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerElement.id + "</p></div>";
-        }
-    } else if (fromZone === 'roster' || fromZone === 'scratched') {
-        if (currentPlayerInZone === currentZone.id) {
-            currentZone.querySelector('.card-text').innerHTML = playerId;
-            currentZone.style.border = "2px solid green";
-            playerElement.remove();
-        } else {
-            if (currentPlayerInZone !== currentZone.id) {
-                let existingPlayerName = currentPlayerInZone;
-                currentZone.querySelector('.card-text').innerHTML = playerId;
-                currentZone.style.border = "2px solid green";
-                playerElement.remove();
-                createDraggablePlayerDiv(existingPlayerName);
+
+
+        let targetOriginalPlayerName =  target.querySelector('.card-text').innerHTML 
+
+
+     
+        if(target.id === targetOriginalPlayerName) {  // Empty lineup
+            console.log("YES" ,"playerName:", playerName,"target:", target)
+            
+            target.querySelector('.card-text').innerHTML = playerName;
+            target.style.border = "2px solid green";
+            if (playerDiv) {
+                playerDiv.style.border = "1px solid black";
+                
+                playerDiv.setAttribute('draggable', false);
+                playerDiv.innerHTML = "<div class=\"card\"><div class=\"card-body \"><p class=\"card-text\">" + playerDiv.id + "</p></div></div>";
             }
+
+        } else {    //  a player was already assigned.
+            console.log("NO", "playerName:", playerName, "target:", target)
+
+            target.querySelector('.card-text').innerHTML = playerName;
+            target.style.border = "2px solid green";
+            if (playerDiv) {
+                playerDiv.style.border = "1px solid black";
+                
+                playerDiv.setAttribute('draggable', false);
+                playerDiv.innerHTML = "<div class=\"card-body \"><p class=\"card-text\">" + playerDiv.id + "</p></div>";
+            }
+
+            createDraggablePlayerDiv(currentPlayerInZone);
+        }
+       
+    
+
+
+
+
+
+
+
+
+    } else if (fromZone === 'Roster' || fromZone === 'Scratched') {
+        console.log("setting a new player!")
+        if (currentPlayerInZone === target.id) {  //  if the location was empty
+           
+            target.querySelector('.card-text').innerHTML =  playerName 
+            target.style.border = "2px solid green";
+            playerDiv.remove()
+        } 
+        else if (currentPlayerInZone !== target.id) {  //  if a player was previously assigned
+                let existingPlayerName = currentPlayerInZone;
+                playerDiv.remove();
+                target.innerHTML = "<div class=\"card\"><div class=\"card-body \"><p class=\"card-text\">" + playerDiv.id + "</p></div></div>";
+                createDraggablePlayerDiv(existingPlayerName);
+            
         }
     }
 
-    currentZone.setAttribute('draggable', true);
-    currentZone.addEventListener('dragstart', function (event) {
-        event.dataTransfer.setData('playerId', playerId);
+    target.setAttribute('draggable', true);
+    target.addEventListener('dragstart', function (event) {
+        event.dataTransfer.setData('playerId', playerName);
         event.dataTransfer.setData('fromZone', 'roster-container');
-        event.dataTransfer.setData('elementId', currentZone.id);
+        event.dataTransfer.setData('elementId', target.id);
     });
 }
 
@@ -123,11 +162,11 @@ function handleDropBackToRoster(event) {
     let fromZone = event.dataTransfer.getData('fromZone');
     let playerDiv = document.getElementById(elementId);
 
-    if (fromZone === 'roster') {
+    if (fromZone === 'Roster') {
         return;
     }
 
-    if (fromZone === 'scratched') {
+    if (fromZone === 'Scratched') {
         playerDiv.remove();
         createDraggablePlayerDiv(playerId);
         return;
@@ -135,11 +174,10 @@ function handleDropBackToRoster(event) {
 
     if (fromZone === 'roster-container') {
         if (playerDiv) {
-            playerDiv.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerDiv.id + "</p></div>";
+            playerDiv.innerHTML = "<div class=\"card\"><div class=\"card-body \"><p class=\"card-text\">" + playerDiv.id + "</p></div></div>";
             createDraggablePlayerDiv(playerId);
             playerDiv.style.border = "1px solid black";
             playerDiv.setAttribute('draggable', false);
-            playerDiv.style.padding = "10px";
         } else {
             console.error("Container element not found");
         }
@@ -153,21 +191,17 @@ function handleDropToScratched(event) {
     let fromZone = event.dataTransfer.getData('fromZone');
     let playerDiv = document.getElementById(elementId);
 
-    if (fromZone === 'scratched') {
+    if (fromZone === 'Scratched') {
         return;
     }
 
     if (fromZone === 'roster-container') {
         let container = document.getElementById(event.target.id);
-        if (container) {
-            container.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + event.target.id + "</p></div>";
-            container.setAttribute('draggable', false);
-        }
+       
         if (playerDiv) {
             playerDiv.style.border = "1px solid black";
+            playerDiv.innerHTML ="<div class=\"card\"><div class=\"card-body \"><p class=\"card-text\">" + playerDiv.id + "</p></div></div>";
             playerDiv.setAttribute('draggable', false);
-            playerDiv.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerDiv.id + "</p></div>";
-            playerDiv.style.padding = "10px";
         }
     } else {
         if (playerDiv) {
@@ -184,7 +218,7 @@ function handleDropToScratched(event) {
 
     scratchDiv.addEventListener('dragstart', function (event) {
         event.dataTransfer.setData('playerId', playerId);
-        event.dataTransfer.setData('fromZone', 'scratched');
+        event.dataTransfer.setData('fromZone', 'Scratched');
         event.dataTransfer.setData('elementId', scratchDiv.id);
     });
 }
@@ -192,45 +226,68 @@ function handleDropToScratched(event) {
 
 
 
-
 function handleTouchEndOnContainer(data) {
-    
-    let dragged = data.dragged;
-    let target = data.currentTarget;
-    let fromZone = data.fromZone;
+    let dragged = data.dragged; // The player element being dragged
+    let target = data.currentTarget; // The target container
+    let fromZone = data.fromZone; // The zone from where the player was dragged
+    let playerName = dragged.querySelector('.card-text').innerHTML; // Current player in the target container
+   
 
-    let currentPlayerInZone = target.querySelector('.card-text').innerHTML;
+    let currentPlayerInZone = target.querySelector('.card-text').innerHTML; // Current player in the target container
 
     if (fromZone === 'roster-container') {
-       
-        target.querySelector('.card-text').innerHTML = target.id;
-        target.style.border = "2px solid green";
-        if (playerElement) {
-            playerElement.style.border = "1px solid black";
-            playerElement.setAttribute('draggable', false);
-            playerElement.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerElement.id + "</p></div>";
+        let targetOriginalPlayerName = target.querySelector('.card-text').innerHTML;
+
+        // Case: Dropping into an empty lineup position
+        if (target.id === targetOriginalPlayerName) {
+            console.log("YES", "dragged:", dragged.id, "target:", target);
+
+            target.querySelector('.card-text').innerHTML = playerName;
+            target.style.border = "2px solid green";
+
+            if (dragged) {
+                dragged.style.border = "1px solid black";
+                dragged.setAttribute('draggable', false);
+                dragged.innerHTML = "<div class=\"card \"><div class=\"card-body \"><p class=\"card-text\">" + dragged.id + "</p></div></div>";
+            }
+        } else {
+            // Case: A player was already assigned, swap players
+            console.log("NO", "dragged:", dragged.id, "target:", target);
+
+            target.querySelector('.card-text').innerHTML = playerName;
+            target.style.border = "2px solid green";
+
+            if (dragged) {
+                dragged.style.border = "1px solid black";
+                dragged.setAttribute('draggable', false);
+                dragged.innerHTML = "<div class=\"card \"><div class=\"card-body \"><p class=\"card-text\">" + dragged.id + "</p></div></div>";
+            }
+
+            // Move the existing player back to their original zone
+            createDraggablePlayerDiv(currentPlayerInZone);
         }
-    } 
-    else if (fromZone === 'Roster' || fromZone === 'Scratched') {
-     
-        if (currentPlayerInZone === target.id) {
+
+    } else if (fromZone === 'Roster' || fromZone === 'Scratched') {
+        console.log("setting a new player!");
+
+        if (currentPlayerInZone === target.id) { // If target was empty
             target.querySelector('.card-text').innerHTML = dragged.id;
             target.style.border = "2px solid green";
             dragged.remove();
-        } else {
-            if (currentPlayerInZone !== currentZone.id) {
-                let existingPlayerName = currentPlayerInZone;
-                target.querySelector('.card-text').innerHTML = dragged.id;
-                target.style.border = "2px solid green";
-                target.remove();
-                createDraggablePlayerDiv(existingPlayerName);
-            }
+        } else if (currentPlayerInZone !== target.id) { // A player was already assigned
+            let existingPlayerName = currentPlayerInZone;
+            target.querySelector('.card-text').innerHTML = dragged.id;
+            target.style.border = "2px solid green";
+            
+            createDraggablePlayerDiv(existingPlayerName); // Move the existing player back to original zone
         }
     }
 
+    // Ensure touch events are re-enabled after handling
     target.addEventListener('touchstart', handleTouchStart);
     target.addEventListener('touchmove', handleTouchMove);
-    //target.addEventListener('touchend', handleTouchEnd);
+    // Optionally: Add touchend event again if needed (depends on your logic flow)
+    // target.addEventListener('touchend', handleTouchEnd);
 }
 
 
@@ -251,48 +308,45 @@ function handleTouchEndBackToRoster(data) {
 
     if (fromZone === 'Scratched') {
         dragged.remove();
-        createDraggablePlayerDiv(playerId);
+        createDraggablePlayerDiv(playerName);
         return;
     }
 
     if (fromZone === 'roster-container') {
-        if (target) {
-            dragged.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + dragged.id + "</p></div>";
-            dragged.style.border = "1px solid black";
-            dragged.setAttribute('draggable', false);
-            dragged.style.padding = "10px";
-            createDraggablePlayerDiv(playerName);
-        } else {
-            console.error("Container element not found");
-        }
+
+        // Find the container the player was dragged out from
+        const rosterContainer = dragged.parentElement;  // Assuming dragged was inside a roster-container
+        
+        //rosterContainer.style.border = "1px solid black";
+        rosterContainer.setAttribute('draggable', false);
+        rosterContainer.innerHTML = "<div class=\"card roster-container\"><div class=\"card-body \"><p class=\"card-text\">" + dragged.id + "</p></div></div>";
+        //rosterContainer.style.padding = "10px";
+   
+        createDraggablePlayerDiv(playerName);
     }
 }
 
 function handleTouchEndToScratched(data) {
     
     let dragged = data.dragged;
-    let elementId = data.currentTarget;
+    let target = data.currentTarget;
     let fromZone = data.fromZone;
 
+    let playerName = dragged.querySelector('.card-text').innerHTML;
     let playerId = dragged.id;
-    let lineupDiv = document.getElementById(elementId);
 
-    console.log("Data", elementId)
-
-    if (fromZone === 'scratched') {
-        return;
-    }
+    if (fromZone === 'scratched') {  return;   }
 
     if (fromZone === 'roster-container') {
-        if (dragged) {
-            dragged.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + dragged.id + "</p></div>";
-            dragged.setAttribute('draggable', false);
-        }
-        if (lineupDiv) {
-            lineupDiv.style.border = "1px solid black";
-            lineupDiv.setAttribute('draggable', false);
-            lineupDiv.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerDiv.id + "</p></div>";
-            lineupDiv.style.padding = "10px";
+
+        // Find the container the player was dragged out from
+        const rosterContainer = dragged.parentElement;  // Assuming dragged was inside a roster-container
+
+        if (rosterContainer) {
+           // rosterContainer.style.border = "1px solid black";
+            rosterContainer.setAttribute('draggable', false);
+            rosterContainer.innerHTML = "<div class=\"card roster-container\"><div class=\"card-body \"><p class=\"card-text\">" + playerId + "</p></div></div>";
+           // rosterContainer.style.padding = "10px";
         }
     } else {
         if (dragged) {
@@ -300,10 +354,12 @@ function handleTouchEndToScratched(data) {
         }
     }
 
-    let scratchDiv = createDiv(playerId)
+
+    let scratchDiv = createDiv()
         .parent('Scratched')
-        .addClass('rosterElm scratch Scratched')
+        .addClass('card Scratched rosterElm draggable scratch p-0 ')
         .elt;
+    scratchDiv.innerHTML = "<div class=\"card-body p-0 \"><p class=\"card-text\">" + playerName + "</p></div>";
     scratchDiv.setAttribute('draggable', true);
     scratchDiv.id = playerId;
 

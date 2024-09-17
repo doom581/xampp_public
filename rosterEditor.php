@@ -210,7 +210,7 @@ $playersPositions = ['LW', 'C', 'RW', 'DD'];
             </div>
             <div class="card text-center ">
                 <div class="card-header">Scratch</div>
-                <div class="card-body m-0 p-3 Scratched" id="Scratched"></div>
+                <div class="card-body m-0 p-1 Scratched" style="min-height:50px;" id="Scratched"></div>
             </div>
         </div>
 
