@@ -223,6 +223,10 @@ function handleDropToScratched(event) {
     let fromZone = event.dataTransfer.getData('fromZone');
     let playerDiv = document.getElementById(elementId)
 
+    if (fromZone === 'scratched') {
+        return
+    }
+
     if (fromZone === 'roster-container') {
           // Reset the original container to its default state
           let container = document.getElementById(event.target.id);
