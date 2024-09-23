@@ -52,4 +52,6 @@ If (file_exists("STHSSetting.ini") == True){try{
 if(isset($_GET['Lang'])){$lang  = filter_var($_GET['Lang'], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW || FILTER_FLAG_STRIP_HIGH);$LangOverwrite=TRUE;}  /* Allow Users Language Overwrite */
 If ($lang == "fr"){include 'LanguageFR.php';}else{include 'LanguageEN.php';}
 require_once "Cookie.php";
+
+
 ?>

@@ -2,6 +2,10 @@ $(document).ready(function() {
 
     console.log('LHSQC Javascript loaded'); // Check if the event is triggered
 
+    
+
+
+
     //Mobile Nav
 
       // Toggle the main mobile menu
@@ -55,6 +59,10 @@ $(document).ready(function() {
         }
         });
     });
+
+    
+    
+    
 
 
 
@@ -164,4 +172,5 @@ $(document).ready(function() {
 	});
 
 });					
+
 

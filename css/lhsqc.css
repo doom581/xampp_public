@@ -982,10 +982,13 @@ padding-right: 6px;
 
 .roster-container {
     border: 1px solid black; /* Black thin border */
+    color: #b0ccbb;
+    padding: 10px;
 }
 
 .roster-container .card-body {
-    padding: 10px;
+    color: #27ae60;
+    border: 1px solid rgb(2, 168, 24);
 }
 
 .roster-container p {
@@ -993,7 +996,7 @@ padding-right: 6px;
 }
 
 .roster-container .card-text {
-    color: #b0ccbb;
+    color: #27ae60;
 }
 
 .Roster  {

@@ -8,9 +8,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="author" content="Special Blend Production" />
     <meta name="Decription" content="<?php echo $LeagueOwner . " - " . $MetaContent;?>" />
-   
-    <link href="STHSMain.css" rel="stylesheet" type="text/css" />
 
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+
+    <link href="STHSMain.css" rel="stylesheet" type="text/css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />
  
@@ -24,15 +28,13 @@
 
     <link href="css/styleT.css" rel="stylesheet" type="text/css" />
     <link href="css/lhsqc.css" rel="stylesheet" type="text/css" />
-
-
-        
+  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
-
-    <script src="js/STHSMain.js" type="text/javascript"></script>
     <script src="js/lhsqc.js"    type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
 
 
-      
+
+
+                    

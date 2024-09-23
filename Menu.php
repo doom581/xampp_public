@@ -1,7 +1,12 @@
+
+
+
 <?php
+
 $MenuFreeAgentYear = (integer)1;
 $MenuTeamTeamID = (integer)0;
 $MenuQueryOK = (boolean)False;
+
 
 If (file_exists($DatabaseFile) == false){
 	Goto STHSErrorMenu;
@@ -210,19 +215,24 @@ if ($MenuQueryOK == True) {
 ?>
 
 <nav>
-			<div class="logo">
-				<a href="index.php"> <img src="images/lhsqc_logo_2.png" alt="LHSQC" class="header-logo"></a>
-			</div>
-			<ul>
-				<li class="active"><a href="index.php">Home</a></li>
-				<li><a href="#">Stats</a><ul> <?php echo $menuStatsItems; ?> </ul></li>
-                <li><a href="#">Trades</a><ul> <?php echo $menuTradesItems; ?> </ul></li>
-                <li><a href="#proBar" class="scroll-link">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
-                <li><a href="rosterEditor.php">Coach's Corner</a></li>
-                <li><a href="Schedule.php">Schedule</a></li>
-                <li><a href="Standing.php">Standing</a></li>
-                <li><a href="Login.php">LOGIN</a></li>
-			</ul>
+    <div class="logo">
+        <a href="index.php"> <img src="images/lhsqc_logo_2.png" alt="LHSQC" class="header-logo"></a>
+    </div>
+    <ul>
+        <li class="active"><a href="index.php">Home</a></li>
+        <li><a href="#">Stats</a><ul> <?php echo $menuStatsItems; ?> </ul></li>
+        <li><a href="#">Trades</a><ul> <?php echo $menuTradesItems; ?> </ul></li>
+        <li><a href="ProTeam.php">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
+        <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Coach's Corner</a></li>
+        <li><a href="Schedule.php">Schedule</a></li>
+        <li><a href="Standing.php">Standing</a></li>
+
+        <?php if (isset($_COOKIE[$Cookie_Name])): ?>
+            <li><a href="Login.php?Logoff=STHS" class="button yellow-bg">LOGOUT</a></li>
+        <?php else: ?>
+            <li><a href="Login.php" class="button yellow-bg">LOGIN</a></li>
+        <?php endif; ?>
+    </ul>
 </nav>
 
 <div class="nav-mobile">

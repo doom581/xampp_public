@@ -1,6 +1,4 @@
 <?php include "Header.php"; ?>
-
-
 <?php 
 If ($lang == "fr"){include 'LanguageFR-Main.php';}else{include 'LanguageEN-Main.php';}
 $IndexQueryOK = (boolean)False;
