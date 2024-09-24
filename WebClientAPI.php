@@ -373,6 +373,10 @@ function load_api_pageinfo(){
 				$confirmbanner = "";
 				$sql = "";
 				$execute = false;
+
+
+
+                
 				// If the Save Lines button has been clicked.
 				if(isset($_POST["sbtRoster"])){
 					// Create an array to organize the information
@@ -1555,7 +1559,9 @@ function load_api_sql(){
 		return $sql;
 	}
 }
+
 if(isset($_GET['PHPINFO'])){phpinfo();}
+
 function load_api_security(){
 	function api_security_authenticate($POST,$row){
 		if(array_key_exists("sbtClientLogin", $POST) && api_security_passcheck($row,$POST["txtPassword"])){

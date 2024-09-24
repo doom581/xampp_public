@@ -17,10 +17,61 @@
 	// Call the required APIs
 	load_apis($exempt);
 	
-	// Make a connection variable to pass to API
+
+
+
+
+    	// Make a connection variable to pass to API
 	$db = api_sqlite_connect($DatabaseFile);
-	if ($db != Null){
-		
+
+    if ($db != Null){
+
+        // Check integrity
+        $result = $db->querySingle("PRAGMA integrity_check;", true);
+        echo "Integrity check result: " . $result['integrity_check'];
+
+// TEST
+$Player = 3234; // The player's Number
+$newWeight = 180; // The new weight value you want to set
+
+// Check if the player exists
+$Query = "SELECT count(*) AS count FROM PlayerInfo WHERE Number = " . $Player;
+$Result = $db->querySingle($Query, true);
+
+if ($Result['count'] == 1) {
+    // Update the weight field for the specified player
+    $updateQuery = "UPDATE PlayerInfo SET weight = " . $newWeight . " WHERE Number = " . $Player;
+
+    // Execute the update query
+    if ($db->exec($updateQuery) === false) {
+        echo "Error updating weight: " . $db->lastErrorMsg();
+    } else {
+        echo "Weight updated successfully.";
+    }
+
+    // Optionally, retrieve and display the updated player information
+    $Query = "SELECT PlayerInfo.*, TeamProInfo.Name AS ProTeamName FROM PlayerInfo LEFT JOIN TeamProInfo ON PlayerInfo.Team = TeamProInfo.Number WHERE PlayerInfo.Number = " . $Player;
+    $PlayerInfo = $db->querySingle($Query, true);
+
+    if ($PlayerInfo) {
+        foreach ($PlayerInfo as $field => $value) {
+            echo "$field: $value <br>";
+        }
+    } else {
+        echo "No player information found.";
+    }
+} else {
+    echo "Player not found.";
+}
+
+
+
+// end TEST
+
+
+
+
+
 		$Query = "Select ShowWebClientInDymanicWebsite FROM LeagueOutputOption";
 		$LeagueOutputOption = $db->querySingle($Query,true);
 		
@@ -45,10 +96,19 @@
 		// 5 Paramaters. PageID, database, teamid, League = Pro/Farm, $headcode (custom headercode can be added. DEFAULT "")
 		api_layout_header("rostereditor",$db,$t,false,$WebClientHeadCode);
         ?>
+        
         <header>
         <?php
 		include "Menu.php";
-		
+
+ // testing db access       
+try {
+    $db->exec("INSERT INTO test_table (col) VALUES ('test')");
+    echo "Write successful!";
+} catch (Exception $e) {
+    echo "Write failed: " . $e->getMessage();
+}
+
 		if ($CookieTeamNumber == 102){$DoNotRequiredLoginDynamicWebsite = TRUE;} // Commish is allow to upload anything so we are using the code from the 'Do Not Required Login Dynamic Website' to achieve this goal.
 		
 		if(($CookieTeamNumber == $t OR $DoNotRequiredLoginDynamicWebsite == TRUE) AND $t > 0 AND $t <= 100){
@@ -58,9 +118,6 @@
                 //api_pageinfo_editor_roster($db,$t, false);
                 $teamid = $t;
                 $showHeader=false;
-
-            
-
 
                 $FullFarmEnableGlobal = false;
                 $FullFarmEnableLocal = false; ?>
@@ -81,6 +138,11 @@
                         $confirmbanner = "";
                         $sql = "";
                         $execute = false;
+
+
+
+
+
                         // If the Save button has been clicked.
                         if(isset($_POST["sbtRoster"])){
                             // Create an array to organize the information
@@ -127,38 +189,57 @@
                             <script>
                             // Parse the JSON string into a JavaScript object
                             let arr = JSON.parse('<?php echo $jsonArrSort; ?>');
-                            console.log(arr);
+                            console.log("Debug:", arr);
                             </script>
                             <?php
 
-                            if(count($arrSort) > 0){
-                                foreach($arrSort AS $table=>$player){
-                                    foreach($player AS $number=>$statuses){
-                                        if($table == "Goaler")$number -= 10000;
-                                        $sql .= "UPDATE " . $table . "Info ";
+                            $success = true; // Track the success of the SQL operations
+
+                            if (count($arrSort) > 0) {
+                                foreach ($arrSort as $table => $player) {
+                                    foreach ($player as $number => $statuses) {
+                                        if ($table == "Goaler") $number -= 10000;
+                                        $sql = "UPDATE " . $table . "Info ";
                                         $sql .= "SET ";
-                                        foreach($statuses AS $status=>$s){
-                                            for($x=1;$x<=10;$x++){
-                                                $sql .= "Status". $x ." = " . $s . ", ";
+                                        foreach ($statuses as $status => $s) {
+                                            for ($x = 1; $x <= 10; $x++) {
+                                                $sql .= "Status" . $x . " = " . $s . ", ";
                                             }
                                         }
-                                        $sql .= "WebClientModify = 'True' ";
-                                        $sql .= ", WebClientIP = '" . $_SERVER['REMOTE_ADDR'] . "' ";
+                                        $sql .= "WebClientModify = 'True', ";
+                                        $sql .= "WebClientIP = '" . $_SERVER['REMOTE_ADDR'] . "' ";
                                         $sql .= "WHERE Number = " . $number . ";";
-                                    } // End foreach $player
-                                }// End foreach $arrSort
-                                $sql.= "Update TeamFarmInfo SET FullFarm = '". (($_POST['FullFarmEnableLocal'] == "true") ? 'True' : 'False') ."' WHERE Number = " . $teamid . ";";
-                                //Update the database and save the lines.
-                                $db->busyTimeout(5000);
-                                $db->exec("pragma journal_mode=memory;");
-                                $db->exec($sql);
-                                
-                                $TransactionSQL = "INSERT Into LeagueLog (Number, Text, DateTime, TransactionType) VALUES ('" . rand(90000,99999) . "','Save Roster for " . $teamname . "','" . gmdate('Y-m-d H:i:s') . "','8')";
-                                $db->exec($TransactionSQL);						
-                                
-                                $confirmbannertext = "Roster has been saved."; 
-                            }else{
-                                $confirmbannertext = "No changes have been made to your roster."; 
+
+                                        // Execute update and check for success
+                                        if ($db->exec($sql) === false) {
+                                            $success = false; // Mark failure
+                                            error_log("SQL error: " . $db->lastErrorMsg());
+                                        }
+                                    }
+                                }
+
+                                // Update TeamFarmInfo
+                                $sql = "UPDATE TeamFarmInfo SET FullFarm = '" . (($_POST['FullFarmEnableLocal'] == "true") ? 'True' : 'False') . "' WHERE Number = " . $teamid . ";";
+                                if ($db->exec($sql) === false) {
+                                    $success = false; // Mark failure
+                                    error_log("SQL error: " . $db->lastErrorMsg());
+                                }
+
+                                // Insert into LeagueLog
+                                $TransactionSQL = "INSERT INTO LeagueLog (Number, Text, DateTime, TransactionType) VALUES ('" . rand(90000, 99999) . "','Save Roster for " . $teamname . "','" . gmdate('Y-m-d H:i:s') . "','8')";
+                                if ($db->exec($TransactionSQL) === false) {
+                                    $success = false; // Mark failure
+                                    error_log("SQL error: " . $db->lastErrorMsg());
+                                }
+
+                                // Confirm banner based on success
+                                if ($success) {
+                                    $confirmbannertext = "Roster has been saved.";
+                                } else {
+                                    $confirmbannertext = "Error saving roster. Please try again. <br>" .  $db->lastErrorMsg();
+                                }
+                            } else {
+                                $confirmbannertext = "No changes have been made to your roster.";
                             }
                             
                             $confirmbanner = "<div class=\"confirm\">". $confirmbannertext ."</div>";  
@@ -320,23 +401,23 @@
                                                                                     <div class="">
                                                                                         
 
-                                                                                            <div class="row p-0 m-0">
-                                                                                                <div class="rowname text-wrap p-0 mx-auto my-0"><p class="text-center"><?= $s["Name"]?></p></div>    
+                                                                                            <div class="row ">
+                                                                                                <div class="rowname text-wrap p-0 mx-auto my-0"><span class="text-center"><?= $s["Name"]?></span></div>    
                                                                                             </div>
 
-                                                                                            <div class="row p-0 m-0">
-                                                                                                <div class="col p-0 m-0">
+                                                                                            <div class="row ">
+                                                                                                <div class="col ">
                                                                                                     <span class="badge badge-primary  "><?= $s["PositionString"]?> </span> 
                                                                                                 </div> 
-                                                                                                <div class="col p-0 m-0">
-                                                                                                    <span class= "p-0 m-0 "> </span> 
+                                                                                                <div class="col ">
+                                                                                                    <span class= " "> </span> 
                                                                                                 </div>  
 
-                                                                                                <div class="col text-end mx-2 p-0  ">
-                                                                                                    <div class="row p-0 m-0">
+                                                                                                <div class="col text-end mx-2   ">
+                                                                                                    <div class="row ">
                                                                                                         <div class="cardlabel mx-auto">overall</div>
                                                                                                     </div>
-                                                                                                    <div class="row p-0 m-0">
+                                                                                                    <div class="row ">
                                                                                                         <div class="mx-auto"><?= $s["Overall"]?></div>
                                                                                                     </div>
                                                                                                 </div> 
