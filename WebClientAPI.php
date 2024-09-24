@@ -239,7 +239,7 @@ function load_api_layout(){
 				<meta http-equiv="cache-control" content="no-cache" />
 				<meta http-equiv="expires" content="0" />
 				<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-				<title>STHS WebEditor - 
+				<title>LHSQC WebEditor - 
 				<?php
 					if($id == "rostereditor" && $teamid > 0){  
 						$row = ($teamid > 0) ? api_dbresult_teamname($db,$teamid,"Pro") : array();
@@ -252,10 +252,14 @@ function load_api_layout(){
 					}
 				?>
 				</title>
+          
 				<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 				<link rel="stylesheet" href="css/required.css">
-				<link rel="stylesheet" href="css/labs.css">
-					<?php 
+				
+                
+              
+			
+                <?php 
 					// Using the $id paramater, check if there is a css file with that name to use for this page only. 
 					// If the $id.css exists, load it in.
 					foreach(array("css","js") AS $filetype){
@@ -290,10 +294,11 @@ function load_api_layout(){
 					}
 				if($headcode != ""){echo $headcode;}
 				?>
+               
 				<script src="js/scripts_labs.js"></script><!-- Load in the scripts needed from labs -->
 			</head>
 		<?php
-		// Start the Body, add an onload function if set above.
+		// Start the Body, add an onload function if set above. 
 		?><body<?= (isset($onload)) ? $onload : "";?>><?php
 	}
 

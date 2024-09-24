@@ -6,6 +6,10 @@ function update_position_list(element,byName,display){
 	var pos = [];
 	var pcount = 0;
 	var inputElements = document.getElementsByClassName('position');
+
+    console.log(`Element: ${element}, By Name: ${byName}, Display: ${display}`);
+    // Existing logic
+
 	for(var i=0; inputElements[i]; ++i){
 		if(inputElements[i].checked){
 		   pos[pcount++] = positions[i];

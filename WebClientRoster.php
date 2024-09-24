@@ -120,6 +120,17 @@
                             // Loop through the arrSort variable to make 1 individual line of SQL
                             // Per player to update the Status values in the DB.
 
+                            // Convert the PHP array to a JSON string
+                            $jsonArrSort = json_encode($arrSort);
+
+                            ?>
+                            <script>
+                            // Parse the JSON string into a JavaScript object
+                            let arr = JSON.parse('<?php echo $jsonArrSort; ?>');
+                            console.log(arr);
+                            </script>
+                            <?php
+
                             if(count($arrSort) > 0){
                                 foreach($arrSort AS $table=>$player){
                                     foreach($player AS $number=>$statuses){
@@ -154,12 +165,9 @@
                         } // End if isset($_POST["sbtRoster"])
 
 
-
-
-                        
                         // If there is a valid team ID to use
-                        if(api_validate_teamid($db,$teamid)){?>
-                                <?php 
+                        if(api_validate_teamid($db,$teamid)){
+
                                 //echo $confirmbanner;
                                 $status = array();
                                 $sql = api_sql_get_roster_players($teamid);
@@ -201,12 +209,18 @@
                                         $status[$s][$row["Status".$s]][$row["Number"]]["EmergencyRecall"] = $row["EmergencyRecall"];
                                     } // End for loop for statuses
                                 } // End while loop for players in result.
+                             
 
                                 // Create a next 10 games array to see the games both Pro and Farm will play.
                                 $nextgames = api_get_nextgames($db,$teamid);
+                               
                                 
+
+                             
+
                                 // start the form to submit the roster.?>
-                                <form name="frmRosterEditor" method="POST" id="frmRoster" class="STHSWebClient_Form">
+                                <div class="container">
+                                <form name="frmRosterEditor" method="POST" id="frmRoster" class="STHSWebClient_Form ">
                                     <?php 
                                         foreach(api_dbresult_roster_editor_fields($db,$teamid) AS $k=>$f){
                                             if(!is_numeric($k)){
@@ -222,29 +236,38 @@
                                             }
                                         }
                                     ?>
-                                    <div class="Save">
-                                        <!--<input type="button" id="change" value="Copy Roster 1 to other days." >-->
-                                        <input id="saveroster" type="submit" name="sbtRoster" value="Save Rosters"> 
-                                        <?php if(api_security_isLogged($teamid)){ api_html_logout_button(); } ?>
-                                    </div>
+                                    
+                                    
 
                                     <?php  
                                         
                                     // This accordion id is a JQuery accordion. If this ID changes then the JQuery has to be changed as well.
                                     ?>
-                                    <div id="accordionfuture">
+                                 <div id="accordionfuture">
                                         <?php 
                                         // Loop through the next games variable to get the lines for the next 10 games.
                                         foreach($nextgames AS $nextgame=>$games){?>
                                             <?php  //$accordionhead = ($games["Pro"]["Day"] != "") ? $nextgame . ". Pro Day " . $games["Pro"]["Day"] ." - " . $games["Pro"]["AtVs"] . " " . $games["Pro"]["Opponent"] ." | Farm: Day " . $games["Farm"]["Day"] . " - " . $games["Farm"]["AtVs"] . " " . $games["Farm"]["Opponent"] : "Currently No Schedule"; ?>
                                             <?php  $accordionhead = api_make_nextgame($games,"Pro") . " | " . api_make_nextgame($games,"Farm"); ?>
-                                            <h3 class="withsave"><?= $accordionhead?>
+                                            <h3 class="withsave paleText"><?= $accordionhead?>
                                             <span id="linevalidate<?=$nextgame;?>"></span></h3>
                                             <div>
                                                 <?php echo $confirmbanner; ?>
                                                 <div id="errors rostererror<?= $nextgame ?>" class="rostererror">
                                                 </div>
-                                                <?php api_html_checkboxes_positionlist("rosterline1","false","list-item",$FullFarmEnableGlobal,$FullFarmEnableLocal); ?>
+                                              
+                                                <div class="row Save">
+                                                    <div class="col-7">
+                                                        <?php api_html_checkboxes_positionlist("rosterline1","false","list-item",$FullFarmEnableGlobal,$FullFarmEnableLocal); ?>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="py-1 my-0">
+                                                            <input id="saveroster" class="btn btn-warning" type="submit" name="sbtRoster" value="Save"> 
+                                                            <?php if(api_security_isLogged($teamid)){ api_html_logout_button(); } ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div class="columnwrapper"><?php 
                                                     for($x=3;$x>=0;$x--){
                                                         if($x == 3){
@@ -263,9 +286,10 @@
                                                         // These id's are in the JQuery call to make the columns sortable via drag and drop. If the IDs change
                                                         // the calls will have to change in the JQuery.
                                                         ?>
+                                                        <div class="">
                                                         <div class="col4">
-                                                            <ol id="sort<?= str_replace(" ","",$columnid)?>" class="sort<?= str_replace(" ","",$columnid) . $nextgame; ?> connectedSortable ui-sortable">
-                                                                <h4 class="columnheader"><?= $type?></h4>
+                                                            <ol id="sort<?= str_replace(" ","",$columnid)?>" class="sort<?= str_replace(" ","",$columnid) . $nextgame; ?> connectedSortable ui-sortable list-group mt-2  ">
+                                                                <h4 class="columnheader paleText"><?= $type?></h4>
                                                                 <input class="rosterline<?=$nextgame; ?>" type="hidden" name="txtRoster[<?=$nextgame; ?>][]" value="LINE|<?= $columnid; ?>">
                                                                 <?php  	
                                                                     // Checks to see if there are players in the current category.
@@ -282,9 +306,9 @@
                                                                             
                                                                             // playerrow class is the class JQuery is looking for to allow the drag and drop process
                                                                             // if an <li> field has this, it can potentially be moved up and down the column.
-                                                                            ?>
-                                                                            <li id="line<?=$nextgame . "_" . api_MakeCSSClass($s["Name"])?>" class="playerrow <?= $columnid . $stick . $inj . $noc . $sus; ?>">
-                                                                                <div class="rowinfo">
+                                                                        ?>
+                                                                            <li id="line<?=$nextgame . "_" . api_MakeCSSClass($s["Name"])?>" class="list-group-item  playerrow <?= $columnid . $stick . $inj . $noc . $sus; ?>">
+                                                                                <div class="rowinfo  ">
                                                                                     <?php 
                                                                                     // Use a hidden field in the form to get the info to save to the SQLite DB.
                                                                                     // The value of the hidden field is a string separated by pipes (|) to parse
@@ -292,7 +316,42 @@
                                                                                     $value = api_fields_input_values($s);
                                                                                     ?>
                                                                                     <input class="rosterline<?=$nextgame; ?> <?= "input".$columnid . $nextgame?>" id="g<?=$nextgame;?>t<?=$columnid;?><?= $colcount++;?>" type="hidden" name="txtRoster[<?=$nextgame; ?>][]" value="<?= $value; ?>">
-                                                                                    <div class="rowname"><?= $s["Name"]?></div><div class="rowinfoline"><?= $s["PositionString"]?> - <?= $s["Overall"]?>OV</div>
+
+                                                                                    <div class="">
+                                                                                        
+
+                                                                                            <div class="row p-0 m-0">
+                                                                                                <div class="rowname text-wrap p-0 mx-auto my-0"><p class="text-center"><?= $s["Name"]?></p></div>    
+                                                                                            </div>
+
+                                                                                            <div class="row p-0 m-0">
+                                                                                                <div class="col p-0 m-0">
+                                                                                                    <span class="badge badge-primary  "><?= $s["PositionString"]?> </span> 
+                                                                                                </div> 
+                                                                                                <div class="col p-0 m-0">
+                                                                                                    <span class= "p-0 m-0 "> </span> 
+                                                                                                </div>  
+
+                                                                                                <div class="col text-end mx-2 p-0  ">
+                                                                                                    <div class="row p-0 m-0">
+                                                                                                        <div class="cardlabel mx-auto">overall</div>
+                                                                                                    </div>
+                                                                                                    <div class="row p-0 m-0">
+                                                                                                        <div class="mx-auto"><?= $s["Overall"]?></div>
+                                                                                                    </div>
+                                                                                                </div> 
+                                                                                            </div>
+
+
+                                                                                        
+                                                                                    </div>
+                                                                                    
+
+                                                                                    
+                                                                                 
+
+
+
                                                                                     <?php if($s["Condition"] < 100){?>
                                                                                         <div class="rowcondition"><?= $s["Condition"]; ?> CD</div>
                                                                                     <?php } ?>
@@ -310,6 +369,7 @@
                                                                         <?php }
                                                                     }?>
                                                             </ol>
+                                                        </div>
                                                         </div><?php
                                                     }?>
                                                 </div><!-- End .columnwrapper-->
@@ -317,7 +377,10 @@
                                         break;
                                         } // End foreach $nextgames?>
                                     </div><!-- End #accordion-->
-                                </form> <!-- End frmRostereditor --><?php 
+                                </form> <!-- End frmRostereditor -->
+                                </div>
+                                
+                                <?php 
                         }elseif(!api_validate_teamid($db,$teamid) && isset($_REQUEST["TeamID"])){
                             // If there is not a valid Teamid, let them know.
                             ?><div class="doesntexits">The team you are looking for does not exist.</div><?php
@@ -364,5 +427,6 @@
         <?php
 		// Display the default footer.
 		api_layout_footer();
+        include ("Footer.php");
 	}
 ?>
