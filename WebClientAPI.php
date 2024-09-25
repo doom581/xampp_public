@@ -136,15 +136,57 @@ function load_api_html(){
 	}
 	function api_html_checkboxes_positionlist($elementName,$byName="true",$display="inline",$FullFarmEnableGlobal,$FullFarmEnableLocal){
 		?>
-		<div class="positionlist">
-			<label><input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posC" name="position" class="position" checked>C</label>
-			<label><input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posLW" name="position" class="position" checked>LW</label>
-			<label><input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posRW" name="position" class="position" checked>RW</label>
-			<label><input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posD" name="position" class="position" checked>D</label>
-			<label><input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posG" name="position" class="position" checked>G</label>
-			<?php if (!( $FullFarmEnableGlobal === null && $FullFarmEnableLocal === null )) { ?>
-					<label><input onchange="toggleFullFarm();" type="checkbox" id="cbFullFarm" name="FullFarm" class="position" <?php if($FullFarmEnableGlobal || $FullFarmEnableLocal) {echo "checked";} ?> >Full Farm</label>
-			<?php }	?>
+		<div class="positionlist ">
+
+            <div class='row'>
+                <div class='col'>
+                    <div class='form-check'>
+                        <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posC" name="position" class="position form-check-input" checked>
+                        <label class="form-check-label " for="posC">C</label>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='form-check'>
+                        <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posLW" name="position" class="position form-check-input" checked>
+                        <label class="form-check-label inline" for="posLW">LW</label>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='form-check'>
+                        <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posRW" name="position" class="position form-check-input" checked>
+                        <label class="form-check-label" for="posRW">RW</label>
+                    </div>
+                </div>    
+            </div> 
+
+            <div class='row'>
+                <div class='col-2'>
+                </div>
+                <div class='col'>
+                    <div class='form-check'>
+                        <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posD" name="position" class="position form-check-input" checked>
+                        <label class="form-check-label" for="posD">D</label>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='form-check'>
+                        <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posG" name="position" class="position form-check-input" checked>                
+                        <label class="form-check-label" for="posG">G</label>
+                    </div>
+                </div> 
+                <div class='col-2'>
+                </div>
+            </div>
+
+            <div class='row invisible'>  
+                <div class='col  d-flex align-items-center justify-content-center'> 
+                    <div class='form-check '>
+                        <input onchange="toggleFullFarm();" type="checkbox" id="cbFullFarm" name="FullFarm" class="position form-check-input" <?php if($FullFarmEnableGlobal || $FullFarmEnableLocal) {echo "checked";} ?> >
+                        <label class="form-check-label " for="cbFullFarm"><small>Full Farm</small></label>
+                    </div>  
+                </div> 
+            </div>
+
 		</div>
 		<?php
 	}
@@ -202,7 +244,8 @@ function load_api_jquery(){
 		    $('#sortable').draggable();
 		});
 		</script><?php
-	}
+
+    }
 }
 
 function load_api_js(){

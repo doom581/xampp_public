@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering
+
 	$lang = "en"; 
 	require_once("LanguageEN.php");
 	$LeagueName = Null;
@@ -6,71 +8,17 @@
 	mb_internal_encoding("UTF-8");
 	$PerformanceMonitorStart = microtime(true); 
 	require_once("STHSSetting.php");
-	//  Get STHS Setting $Database Value	
-
 	require_once("WebClientAPI.php");
-	// exempt is an array of api names.
-	// example, if you do not need the html or layout api then add as an array item
-	// $exempt = array("html","layout");
+	
 	$exempt = array();
 	
 	// Call the required APIs
 	load_apis($exempt);
 	
-
-
-
-
-    	// Make a connection variable to pass to API
+    // Make a connection variable to pass to API
 	$db = api_sqlite_connect($DatabaseFile);
 
     if ($db != Null){
-
-        // Check integrity
-        $result = $db->querySingle("PRAGMA integrity_check;", true);
-        echo "Integrity check result: " . $result['integrity_check'];
-
-// TEST
-$Player = 3234; // The player's Number
-$newWeight = 180; // The new weight value you want to set
-
-// Check if the player exists
-$Query = "SELECT count(*) AS count FROM PlayerInfo WHERE Number = " . $Player;
-$Result = $db->querySingle($Query, true);
-
-if ($Result['count'] == 1) {
-    // Update the weight field for the specified player
-    $updateQuery = "UPDATE PlayerInfo SET weight = " . $newWeight . " WHERE Number = " . $Player;
-
-    // Execute the update query
-    if ($db->exec($updateQuery) === false) {
-        echo "Error updating weight: " . $db->lastErrorMsg();
-    } else {
-        echo "Weight updated successfully.";
-    }
-
-    // Optionally, retrieve and display the updated player information
-    $Query = "SELECT PlayerInfo.*, TeamProInfo.Name AS ProTeamName FROM PlayerInfo LEFT JOIN TeamProInfo ON PlayerInfo.Team = TeamProInfo.Number WHERE PlayerInfo.Number = " . $Player;
-    $PlayerInfo = $db->querySingle($Query, true);
-
-    if ($PlayerInfo) {
-        foreach ($PlayerInfo as $field => $value) {
-            echo "$field: $value <br>";
-        }
-    } else {
-        echo "No player information found.";
-    }
-} else {
-    echo "Player not found.";
-}
-
-
-
-// end TEST
-
-
-
-
 
 		$Query = "Select ShowWebClientInDymanicWebsite FROM LeagueOutputOption";
 		$LeagueOutputOption = $db->querySingle($Query,true);
@@ -86,48 +34,45 @@ if ($Result['count'] == 1) {
 		}
 
         // LHSQC
-        $WebClientHeadCode = "   <link  href=\"https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css\"  rel=\"stylesheet\"/>  <link href=\"css/lhsqc.css\" rel=\"stylesheet\" type=\"text/css\" /> 
-                 
-                                    <script src=\"js/lhsqc.js\"    type=\"text/javascript\"></script>";                      //<link href=\"css/styleT.css\" rel=\"stylesheet\" type=\"text/css\" />   le bouton est autre truc du menu sont encore dams StyleT  :S  mais ca ralenti le drag n drop
-
+        $WebClientHeadCode = "  <link  href=\"https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css\"  rel=\"stylesheet\"/>  
+                                <link href=\"css/lhsqc.css\" rel=\"stylesheet\" type=\"text/css\" /> 
+                                <script src=\"js/lhsqc.js\"    type=\"text/javascript\"></script>                    
+                                <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js\"></script>"; 
 
 
 		// Make a default header 
 		// 5 Paramaters. PageID, database, teamid, League = Pro/Farm, $headcode (custom headercode can be added. DEFAULT "")
 		api_layout_header("rostereditor",$db,$t,false,$WebClientHeadCode);
         ?>
-        
+
         <header>
-        <?php
-		include "Menu.php";
+            
+            
+    
+        <?php include "Menu.php";
 
- // testing db access       
-try {
-    $db->exec("INSERT INTO test_table (col) VALUES ('test')");
-    echo "Write successful!";
-} catch (Exception $e) {
-    echo "Write failed: " . $e->getMessage();
-}
+$FullFarmEnableGlobal = false;
+$FullFarmEnableLocal = false;
 
-		if ($CookieTeamNumber == 102){$DoNotRequiredLoginDynamicWebsite = TRUE;} // Commish is allow to upload anything so we are using the code from the 'Do Not Required Login Dynamic Website' to achieve this goal.
+		if ($CookieTeamNumber == 102){$DoNotRequiredLoginDynamicWebsite = TRUE;} 
 		
 		if(($CookieTeamNumber == $t OR $DoNotRequiredLoginDynamicWebsite == TRUE) AND $t > 0 AND $t <= 100){
-			// Display the roster editor page using API.
-			// use 3 paramaters Database, TeamID, showH1Tag (DEFAULT true/false)   
 			if($t > 0){
-                //api_pageinfo_editor_roster($db,$t, false);
                 $teamid = $t;
                 $showHeader=false;
 
-                $FullFarmEnableGlobal = false;
-                $FullFarmEnableLocal = false; ?>
-                
+                 ?>
+
+
+   
+
+
+
+
                 <div id="rostereditor">
+                    <input type="hidden" id="FullFarmEnableLocal" name="FullFarmEnableLocal" value="false">
                     <div class="pagewrapper pagewrapperrostereditor"><?php 
-                        // $db = sqlite DB
-                        // $teamid is a teamid to use that teams roster.
-                        // $showDropdown is a flag if you want to toggle between teams.
-                        // $showHeader is a flag is you want to show the H1 Tag.
+                       
                         if($showHeader){
                             $row = ($teamid > 0) ? api_dbresult_teamname($db,$teamid,"Pro") : array();
                             $teamname = (!empty($row)) ? $row["FullTeamName"] . " - " : "";
@@ -139,117 +84,92 @@ try {
                         $sql = "";
                         $execute = false;
 
+                        $confirmbanner = isset($_SESSION['confirmbanner']) ? "<div class=\"confirm\">".$_SESSION['confirmbanner']."</div>" : "";
+                        unset($_SESSION['confirmbanner']); // prevent it from showing again on refresh
 
 
+                    // If the Save button has been clicked.
+                    if(isset($_POST["sbtRoster"])){
+                        
+                        $arrSort = array();
+                 
+                        foreach($_POST["txtRoster"] AS $statuses=>$status){
+                            foreach($status AS $s){
+                                $explodeValue = explode("|",$s);
+                                if(count($explodeValue) == 2){
+                                    if($explodeValue[1] == "ProDress")$playerStatus = 3;
+                                    elseif($explodeValue[1] == "ProScratch") $playerStatus = 2;
+                                    elseif($explodeValue[1] == "FarmDress") $playerStatus = 1;
+                                    else $playerStatus = 0;
+                                }else{
+                                    // Check to see if the updated player status = what is already in the DB. 
+                                    // If there is a change, add to the arrSort array.
+                                    $table = ($explodeValue[2] == 16) ? "Goaler" : "Player";
+                                    $arrSort[$table][$explodeValue[1]]["Status". $statuses] = $playerStatus;    
+                                }
+                            } 
+                        } 
+                     
+                        $success = true; // Track the success of the SQL operations
 
-
-                        // If the Save button has been clicked.
-                        if(isset($_POST["sbtRoster"])){
-                            // Create an array to organize the information
-                            // $arrSort[$table][$playerid][$status]
-                            // 		$table = Player or Goalie
-                            // 		$playerid = Player Number from PlayerInfo Table
-                            // 		$status = selected status for that game. 
-                            $arrSort = array();
-                            // Loop through the txtRoster array. txtRoster[$nextgame][] = Divider = LINE|LineType, Player = FirstName LastName| Number | PositionNumber | PositionString
-                            // Explode at the pipe | 
-                            // If the count of the explode is 2 then its a different line
-                            // Section.  Switch the value of what the status should be
-                            // $_POST["txtRoster"][$game][$status]
-                            // $game = int 1-10
-                            // $status = int 0-3
-
-                            foreach($_POST["txtRoster"] AS $statuses=>$status){
-                                foreach($status AS $s){
-                                    $explodeValue = explode("|",$s);
-                                    if(count($explodeValue) == 2){
-                                        if($explodeValue[1] == "ProDress")$playerStatus = 3;
-                                        elseif($explodeValue[1] == "ProScratch") $playerStatus = 2;
-                                        elseif($explodeValue[1] == "FarmDress") $playerStatus = 1;
-                                        else $playerStatus = 0;
-                                    }else{
-                                        // Remove the Check for no change.
-                                        //if($explodeValue[4] != $playerStatus){
-                                            // Check to see if the updated player status = what is already in the DB. 
-                                            // If there is a change, add to the arrSort array.
-                                            $table = ($explodeValue[2] == 16) ? "Goaler" : "Player";
-                                            $arrSort[$table][$explodeValue[1]]["Status". $statuses] = $playerStatus;
-                                        //}	
-                                    }// End if count($explodeValue)
-                                } // End foreach $status
-                            } // End foreach $_POST["txtRoster"]
-                            // If there is something in the arrSort variable, then:
-                            // Loop through the arrSort variable to make 1 individual line of SQL
-                            // Per player to update the Status values in the DB.
-
-                            // Convert the PHP array to a JSON string
-                            $jsonArrSort = json_encode($arrSort);
-
-                            ?>
-                            <script>
-                            // Parse the JSON string into a JavaScript object
-                            let arr = JSON.parse('<?php echo $jsonArrSort; ?>');
-                            console.log("Debug:", arr);
-                            </script>
-                            <?php
-
-                            $success = true; // Track the success of the SQL operations
-
-                            if (count($arrSort) > 0) {
-                                foreach ($arrSort as $table => $player) {
-                                    foreach ($player as $number => $statuses) {
-                                        if ($table == "Goaler") $number -= 10000;
-                                        $sql = "UPDATE " . $table . "Info ";
-                                        $sql .= "SET ";
-                                        foreach ($statuses as $status => $s) {
-                                            for ($x = 1; $x <= 10; $x++) {
-                                                $sql .= "Status" . $x . " = " . $s . ", ";
-                                            }
-                                        }
-                                        $sql .= "WebClientModify = 'True', ";
-                                        $sql .= "WebClientIP = '" . $_SERVER['REMOTE_ADDR'] . "' ";
-                                        $sql .= "WHERE Number = " . $number . ";";
-
-                                        // Execute update and check for success
-                                        if ($db->exec($sql) === false) {
-                                            $success = false; // Mark failure
-                                            error_log("SQL error: " . $db->lastErrorMsg());
+                        if (count($arrSort) > 0) {
+                            foreach ($arrSort as $table => $player) {
+                                foreach ($player as $number => $statuses) {
+                                    if ($table == "Goaler") $number -= 10000;
+                                    $sql = "UPDATE " . $table . "Info ";
+                                    $sql .= "SET ";
+                                    foreach ($statuses as $status => $s) {
+                                        for ($x = 1; $x <= 10; $x++) {
+                                            $sql .= "Status" . $x . " = " . $s . ", ";
                                         }
                                     }
-                                }
+                                    $sql .= "WebClientModify = 'True', ";
+                                    $sql .= "WebClientIP = '" . $_SERVER['REMOTE_ADDR'] . "' ";
+                                    $sql .= "WHERE Number = " . $number . ";";
 
-                                // Update TeamFarmInfo
-                                $sql = "UPDATE TeamFarmInfo SET FullFarm = '" . (($_POST['FullFarmEnableLocal'] == "true") ? 'True' : 'False') . "' WHERE Number = " . $teamid . ";";
-                                if ($db->exec($sql) === false) {
-                                    $success = false; // Mark failure
-                                    error_log("SQL error: " . $db->lastErrorMsg());
+                                    // Execute update and check for success
+                                    if ($db->exec($sql) === false) {
+                                        $success = false; // Mark failure
+                                        error_log("SQL error: " . $db->lastErrorMsg());
+                                    }
                                 }
-
-                                // Insert into LeagueLog
-                                $TransactionSQL = "INSERT INTO LeagueLog (Number, Text, DateTime, TransactionType) VALUES ('" . rand(90000, 99999) . "','Save Roster for " . $teamname . "','" . gmdate('Y-m-d H:i:s') . "','8')";
-                                if ($db->exec($TransactionSQL) === false) {
-                                    $success = false; // Mark failure
-                                    error_log("SQL error: " . $db->lastErrorMsg());
-                                }
-
-                                // Confirm banner based on success
-                                if ($success) {
-                                    $confirmbannertext = "Roster has been saved.";
-                                } else {
-                                    $confirmbannertext = "Error saving roster. Please try again. <br>" .  $db->lastErrorMsg();
-                                }
-                            } else {
-                                $confirmbannertext = "No changes have been made to your roster.";
                             }
-                            
-                            $confirmbanner = "<div class=\"confirm\">". $confirmbannertext ."</div>";  
-                        } // End if isset($_POST["sbtRoster"])
 
+                            // Update TeamFarmInfo
+                            $sql = "UPDATE TeamFarmInfo SET FullFarm = '" . (($_POST['FullFarmEnableLocal'] == "true") ? 'True' : 'False') . "' WHERE Number = " . $teamid . ";";
+                            if ($db->exec($sql) === false) {
+                                $success = false; // Mark failure
+                                error_log("SQL error: " . $db->lastErrorMsg());
+                            }
+
+                            // Insert into LeagueLog
+                            $TransactionSQL = "INSERT INTO LeagueLog (Number, Text, DateTime, TransactionType) VALUES ('" . rand(90000, 99999) . "','Save Roster for " . $teamname . "','" . gmdate('Y-m-d H:i:s') . "','8')";
+                            if ($db->exec($TransactionSQL) === false) {
+                                $success = false; // Mark failure
+                                error_log("SQL error: " . $db->lastErrorMsg());
+                            }
+
+                            // Confirm banner based on success
+                            if ($success) $confirmbannertext = "Roster has been saved.";
+                            else          $confirmbannertext = "Error saving roster. Please try again. <br>" .  $db->lastErrorMsg();
+                            
+                        } else $confirmbannertext = "No changes have been made to your roster.";
+                        
+                        $confirmbanner = "<div class=\"confirm\">". $confirmbannertext ."</div>";  
+                        $_SESSION['confirmbanner'] = $confirmbannertext; // Store the message in session
+                        header("HTTP/1.1 303 See Other");
+                        header("Location: " . $_SERVER['PHP_SELF'] . "?TeamID=" . $CookieTeamNumber); // Redirect to the same page                 
+                      //  header("Location: index.php" ); // Redirect to the same page 
+                        exit();
+                    }
+                        
+
+
+                       
 
                         // If there is a valid team ID to use
                         if(api_validate_teamid($db,$teamid)){
 
-                                //echo $confirmbanner;
                                 $status = array();
                                 $sql = api_sql_get_roster_players($teamid);
                                 $oRS = $db->query($sql);
@@ -296,9 +216,6 @@ try {
                                 $nextgames = api_get_nextgames($db,$teamid);
                                
                                 
-
-                             
-
                                 // start the form to submit the roster.?>
                                 <div class="container">
                                 <form name="frmRosterEditor" method="POST" id="frmRoster" class="STHSWebClient_Form ">
@@ -317,13 +234,6 @@ try {
                                             }
                                         }
                                     ?>
-                                    
-                                    
-
-                                    <?php  
-                                        
-                                    // This accordion id is a JQuery accordion. If this ID changes then the JQuery has to be changed as well.
-                                    ?>
                                  <div id="accordionfuture">
                                         <?php 
                                         // Loop through the next games variable to get the lines for the next 10 games.
@@ -334,6 +244,20 @@ try {
                                             <span id="linevalidate<?=$nextgame;?>"></span></h3>
                                             <div>
                                                 <?php echo $confirmbanner; ?>
+                                                <script>
+                                                    // Hide the confirm banner after 5 seconds
+                                                    setTimeout(() => {
+                                                        const banner = document.querySelector('.confirm');
+                                                        if (banner) banner.style.display = 'none'; // Hides the banner
+                                                        
+                                                    }, 5000);
+
+                                                    // Optionally hide on user interaction
+                                                    document.addEventListener('click', () => {
+                                                        const banner = document.querySelector('.confirm');
+                                                        if (banner) banner.style.display = 'none'; // Hides the banner
+                                                    });
+                                                </script>
                                                 <div id="errors rostererror<?= $nextgame ?>" class="rostererror">
                                                 </div>
                                               
@@ -363,9 +287,6 @@ try {
                                                         $columnid = str_replace(" ","",$type);
                                                         $colcount = 0;
                                                         
-                                                        // the id in the ol will be one of #sortProDress, #sortProScratch, #sortFarmDress, #sortFarmScratch.
-                                                        // These id's are in the JQuery call to make the columns sortable via drag and drop. If the IDs change
-                                                        // the calls will have to change in the JQuery.
                                                         ?>
                                                         <div class="">
                                                         <div class="col4">
@@ -373,66 +294,41 @@ try {
                                                                 <h4 class="columnheader paleText"><?= $type?></h4>
                                                                 <input class="rosterline<?=$nextgame; ?>" type="hidden" name="txtRoster[<?=$nextgame; ?>][]" value="LINE|<?= $columnid; ?>">
                                                                 <?php  	
-                                                                    // Checks to see if there are players in the current category.
-                                                                    // example, if there is at least 1 player in the ProScratch category, loop through and display
                                                                     if(array_key_exists($x, $status[$nextgame])){
                                                                         foreach($status[$nextgame][$x] AS $sid=>$s){
-                                                                            // Checks to see if a player is injured or has 0 contract. if so, it will add an injury or nocontract class
-                                                                            // to the <li> which will not allow him to be part of the JQuery drag and drop
-                                                                            // therefore unmovable. 
-                                                                            $stick = ($s["Condition"] < 95 || $s["Contract"] == 0 || $s["Suspension"]  > 0) ? " sticky": "";
+                                                                              $stick = ($s["Condition"] < 95 || $s["Contract"] == 0 || $s["Suspension"]  > 0) ? " sticky": "";
                                                                             $inj = ($s["Condition"] < 95) ? " injury": "";
                                                                             $noc = ($s["Contract"] == 0) ? " nocontract": "";
                                                                             $sus = ($s["Suspension"]  > 0) ? " suspension": "";
                                                                             
-                                                                            // playerrow class is the class JQuery is looking for to allow the drag and drop process
-                                                                            // if an <li> field has this, it can potentially be moved up and down the column.
-                                                                        ?>
+                                                                            ?>
                                                                             <li id="line<?=$nextgame . "_" . api_MakeCSSClass($s["Name"])?>" class="list-group-item  playerrow <?= $columnid . $stick . $inj . $noc . $sus; ?>">
                                                                                 <div class="rowinfo  ">
                                                                                     <?php 
-                                                                                    // Use a hidden field in the form to get the info to save to the SQLite DB.
-                                                                                    // The value of the hidden field is a string separated by pipes (|) to parse
-                                                                                    // on submit "fieldName|fieldNumber|positionNumber(1-16)|positionString(C,LW)"
-                                                                                    $value = api_fields_input_values($s);
+                                                                                     $value = api_fields_input_values($s);
                                                                                     ?>
                                                                                     <input class="rosterline<?=$nextgame; ?> <?= "input".$columnid . $nextgame?>" id="g<?=$nextgame;?>t<?=$columnid;?><?= $colcount++;?>" type="hidden" name="txtRoster[<?=$nextgame; ?>][]" value="<?= $value; ?>">
 
-                                                                                    <div class="">
+                                                                                    <div class="row ">
+                                                                                        <div class="rowname text-wrap p-1  my-0"><span class="text-center"><?= $s["Name"]?></span></div>    
+                                                                                    </div>
+
+                                                                                    <div class="row ">
+                                                                                        <div class="col-1">
+                                                                                            <span class="badge badge-primary d-flex justify-content-center  "><?= $s["PositionString"]?> </span> 
+                                                                                        </div> 
                                                                                         
 
+                                                                                        <div class="col-2 text-end px-3 mx-2">
                                                                                             <div class="row ">
-                                                                                                <div class="rowname text-wrap p-0 mx-auto my-0"><span class="text-center"><?= $s["Name"]?></span></div>    
+                                                                                                <div class="cardlabel d-flex justify-content-center ">overall</div>
                                                                                             </div>
-
-                                                                                            <div class="row ">
-                                                                                                <div class="col ">
-                                                                                                    <span class="badge badge-primary  "><?= $s["PositionString"]?> </span> 
-                                                                                                </div> 
-                                                                                                <div class="col ">
-                                                                                                    <span class= " "> </span> 
-                                                                                                </div>  
-
-                                                                                                <div class="col text-end mx-2   ">
-                                                                                                    <div class="row ">
-                                                                                                        <div class="cardlabel mx-auto">overall</div>
-                                                                                                    </div>
-                                                                                                    <div class="row ">
-                                                                                                        <div class="mx-auto"><?= $s["Overall"]?></div>
-                                                                                                    </div>
-                                                                                                </div> 
+                                                                                            <div class="row">
+                                                                                                <div class="d-flex justify-content-center"><?= $s["Overall"]?></div>
                                                                                             </div>
-
-
-                                                                                        
+                                                                                        </div> 
                                                                                     </div>
                                                                                     
-
-                                                                                    
-                                                                                 
-
-
-
                                                                                     <?php if($s["Condition"] < 100){?>
                                                                                         <div class="rowcondition"><?= $s["Condition"]; ?> CD</div>
                                                                                     <?php } ?>
@@ -453,48 +349,24 @@ try {
                                                         </div>
                                                         </div><?php
                                                     }?>
-                                                </div><!-- End .columnwrapper-->
-                                            </div><!-- End classless/id-less div for the accordion--><?php 
+                                                </div>
+                                            </div><?php 
                                         break;
-                                        } // End foreach $nextgames?>
-                                    </div><!-- End #accordion-->
-                                </form> <!-- End frmRostereditor -->
+                                        } ?>
+                                    </div>
+                                </form> 
                                 </div>
                                 
                                 <?php 
                         }elseif(!api_validate_teamid($db,$teamid) && isset($_REQUEST["TeamID"])){
-                            // If there is not a valid Teamid, let them know.
                             ?><div class="doesntexits">The team you are looking for does not exist.</div><?php
-                        }// End if/else there is a teamid as a parameter?>
-                    </div><!-- end pagewrapper -->
-                </div><!-- end id rostereditor --><?php
+                        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+                        
+                        
+                        ?>
+                    </div>
+                </div><?php
             }
 		}else{
 			echo "<div class=\"STHSDivInformationMessage\">" . $NoUserLogin . "<br /><br /></div>";
@@ -510,4 +382,7 @@ try {
 		api_layout_footer();
         include ("Footer.php");
 	}
+
+    ob_end_flush(); // Flush the buffer
+
 ?>

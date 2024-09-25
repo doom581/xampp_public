@@ -156,7 +156,7 @@ if (!file_exists($DatabaseFile)) {
                     //ob_flush();
                    // flush();                
                     // Perform redirect after cookie is set and headers are flushed
-                    header("Location: /ProTeam.php?Team" . $CookieTeamNumber);
+                    header("Location: /WebClientRoster.php?Team" . $CookieTeamNumber);
                     exit();  // Ensure no further code is executed after the redirect
                 }			
 			               

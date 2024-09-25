@@ -1,17 +1,25 @@
 <?php
 $db = new SQLite3('/home/yb/xampp_public/LHSQC-STHS.db');
 
-// Test write
-$result = $db->exec("UPDATE PlayerInfo SET Weight = 75 WHERE Number = 3234");
+// Check integrity
+$result = $db->querySingle("PRAGMA integrity_check;", true);
+echo "Integrity check result: " . $result['integrity_check'];
+echo "<br>";echo "<br>";
 
-if ($result) {
-    echo "Write successful!";
-} else {
-    echo "Write failed: " . $db->lastErrorMsg();
+
+// testing db access       
+try {
+    $db->exec("INSERT INTO test_table (col) VALUES ('test')");
+    echo "Default Write test successful!";
+} catch (Exception $e) {
+    echo "Default Write test failed: " . $e->getMessage();
 }
 
 
-  /*  function listTables($db) {
+echo "<br>";echo "<br>";
+
+
+   function listTables($db) {
         // Query to get all table names
         $result = $db->query("SELECT name FROM sqlite_master WHERE type='table';");
     
@@ -26,22 +34,22 @@ if ($result) {
         }
     }
     	
-	// Make a connection variable to pass to API
-	$db = api_sqlite_connect($DatabaseFile);
-
-    if ($db) {
-        // List tables in the database
-        $tables = listTables($db);
-        echo json_encode($tables); // Output tables as JSON
-    } else {
-        echo json_encode(["error" => "Failed to connect to the database."]); // Error message
-    }*/
 
 
-/*
+if ($db) {
+    // List tables in the database
+    $tables = listTables($db);
+    echo "Tables list:";
+    echo json_encode($tables); // Output tables as JSON
+} else {
+    echo json_encode(["error" => "Failed to connect to the database."]); // Error message
+}
+
+echo "<br>";echo "<br>";
+
 // TEST
 $Player = 3234; // The player's Number
-$newWeight = 180; // The new weight value you want to set
+$newWeight = 215; // The new weight value you want to set
 
 // Check if the player exists
 $Query = "SELECT count(*) AS count FROM PlayerInfo WHERE Number = " . $Player;
@@ -53,9 +61,9 @@ if ($Result['count'] == 1) {
 
     // Execute the update query
     if ($db->exec($updateQuery) === false) {
-        echo "Error updating weight: " . $db->lastErrorMsg();
+        echo "Error updating weight: " . $db->lastErrorMsg();echo "<br>";echo "<br>";
     } else {
-        echo "Weight updated successfully.";
+        echo "Weight updated successfully.";echo "<br>";echo "<br>";
     }
 
     // Optionally, retrieve and display the updated player information
@@ -67,10 +75,10 @@ if ($Result['count'] == 1) {
             echo "$field: $value <br>";
         }
     } else {
-        echo "No player information found.";
+        echo "No player information found.";echo "<br>";echo "<br>";
     }
 } else {
-    echo "Player not found.";
+    echo "Player not found.";echo "<br>";echo "<br>";
 }
 
 
@@ -78,6 +86,6 @@ if ($Result['count'] == 1) {
 
 
 
-*/ 
+
 
 ?>

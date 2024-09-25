@@ -251,7 +251,7 @@ if ($MenuQueryOK == True) {
         <li><div> Stats  <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuStatsItems; ?> </ul></li>
         <li><div> Trades <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuTradesItems; ?> </ul></li>
         <li><div> Teams  <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuMobileTeamsItems; ?> </ul></li>
-        <li><a href="rosterEditor.php">Coach's Corner </a></li>
+        <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Coach's Corner </a></li>
         <li><a href="Schedule.php">Schedule</a></li>
         <li><a href="Standings.php">Standings</a></li>
         <li><a href="Login.php">LOGIN</a></li>

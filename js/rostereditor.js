@@ -18,8 +18,8 @@ function roster_validator(	MaximumPlayerPerTeam,MinimumPlayerPerTeam,isWaivers,B
 		var FarmFullRoster = FullRoster -1;
 	}
 	// Disable checkbox if FullFarm is globally enabled	
-	if (FullFarmEnableGlobal == true) {document.getElementById("cbFullFarm").disabled = true;}
-
+	/*if (FullFarmEnableGlobal == true) {document.getElementById("cbFullFarm").disabled = true;}
+*/
 	// Declare variables needed inside the loop. Set to Null
 	var explode, status, proPlayerLimit, farmPlayerLimit, playerProToFarmTradeDeadline, playerProToFarmEliminated;
 
@@ -217,7 +217,7 @@ function roster_validator(	MaximumPlayerPerTeam,MinimumPlayerPerTeam,isWaivers,B
 		if(playerProToFarmEliminated > 0){errorText += '<div class="erroritem farmmove eliminated">Cannot send ' + playerProToFarmEliminated + ' players to the farm. (Eliminated From Playoffs).</div>';}
 		// If the error text is empty still then the roster is complete and display
 		if(errorText == ''){
-			errorElement.innerHTML = waiverText + '<div class="rostercomplete">Roster is complete.</div>';
+			errorElement.innerHTML = waiverText + '<div class="rostercomplete">Roster is valid.</div>';
 			lineValidated[g] = true;
 			document.getElementById("saveroster").disabled = false;
 		// Else there are errors, display them
