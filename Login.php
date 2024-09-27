@@ -75,50 +75,6 @@ if (!file_exists($DatabaseFile)) {
             }
 
 
-
-
-   /*     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["Team"], $_POST["Password"])) {
-            $TeamInput = filter_var($_POST["Team"], FILTER_SANITIZE_NUMBER_INT);
-            $Password = filter_var($_POST["Password"], FILTER_SANITIZE_STRING);
-
-            if ($TeamInput > 0) {
-                if ($TeamInput == 101) { // League Guest
-                    $LeagueGuestCalculateHash = strtoupper(hash('sha512', mb_convert_encoding(($LeagueName . $Password), 'ASCII')));
-                    $LeagueDatabaseGuestHash = $LeagueGeneral['LeagueWebGuestPassword'];
-                    if ($LeagueGuestCalculateHash === $LeagueDatabaseGuestHash && $LeagueDatabaseGuestHash) {
-                        $HashMatch = true;
-                        $CookieArray = [
-                            'TeamNumber' => 101,
-                            'TeamName' => $TopMenuLang['Guest'],
-                            'TeamGM' => '',
-                        ];
-                    }
-                } elseif ($TeamInput == 102) { // League Management
-                    $LeagueCalculateHash = strtoupper(hash('sha512', mb_convert_encoding(($LeagueName . $Password), 'ASCII')));
-                    $LeagueDatabaseHash = $LeagueGeneral['LeagueWebPassword'];
-                    if ($LeagueCalculateHash === $LeagueDatabaseHash && $LeagueDatabaseHash) {
-                        $HashMatch = true;
-                        $CookieArray = [
-                            'TeamNumber' => 102,
-                            'TeamName' => $TopMenuLang['LeagueManagement'],
-                            'TeamGM' => '',
-                        ];
-                    }
-                } else { // GM Hash
-                    $TeamPasswordCookie = $db->querySingle("SELECT Number, Name, GMName, WebPassword FROM TeamProInfo WHERE Number = $TeamInput", true);
-                    $GMCalculateHash = strtoupper(hash('sha512', mb_convert_encoding(($TeamPasswordCookie['GMName'] . $Password), 'ASCII')));
-                    $GMDatabaseHash = $TeamPasswordCookie['WebPassword'];
-                    if ($GMCalculateHash === $GMDatabaseHash && $GMDatabaseHash) {
-                        $HashMatch = true;
-                        $CookieArray = [
-                            'TeamNumber' => $TeamPasswordCookie['Number'],
-                            'TeamName' => $TeamPasswordCookie['Name'],
-                            'TeamGM' => $TeamPasswordCookie['GMName'],
-                        ];
-                    }
-                }
-            }*/
-
             if ($HashMatch) {
 
                 $CookieTeamNumber = $CookieArray['TeamNumber'];
@@ -141,7 +97,7 @@ if (!file_exists($DatabaseFile)) {
                     $CookieArray = array(
                         'expires' => time() + (86400 * 180),
                         'path' => '/',
-                        'domain' => '',  // $_SERVER['HTTP_HOST'],    //  TODO:   the port number is added to the domain is this code is used...
+                        'domain' => $_SERVER['HTTP_HOST'],
                         'secure' => false,
                         'httponly' => true,
                         'samesite' => 'Strict'

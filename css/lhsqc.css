@@ -1,3 +1,8 @@
+@media only screen and (max-width: 600px) {
+    /* Styles for mobile devices */
+}
+
+
 /* RESET */
 /* -----#------------------------------------ */
 *,html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,label,fieldset,input,p,blockquote,th,td{margin:0; padding:0;}
@@ -24,7 +29,6 @@ iframe{display: block;}
 .no-border {border: none!important;}
 .text-align-center { text-align: center!important;}
 .clearfix:after { clear: both; content: ""; display: block; height: 0; }
-
 
 nav ul>li>ul, .accordion-content
 { transition:all 0ms;-moz-transition:all 0ms; /* Firefox 4 */-webkit-transition:all 0ms; /* Safari and Chrome */-o-transition:all 0ms; /* Opera */ }
@@ -1037,7 +1041,6 @@ padding-right: 6px;
 
 
 
-
 .showMe {border: 1px dotted #2e7bdf;}
 
 .paleText {color:#cccccc !important;}
@@ -1061,23 +1064,35 @@ padding-right: 6px;
 .Save input {color:#333; }
 
 
+li.activemain a,li.activemain a:hover{text-decoration:none;font-size:125%;color:#990000;}
+
 .positionlist { 
     border-bottom:1px solid #999999;
     border-top:1px solid #999999; 
     padding:3px;
 }
-.positionlist label{padding-left: 5px; font-size:small;  }
+.positionlist label{padding-left: 2px; font-size:small;  }
 .positionlist option{padding:2px 0px 0px 2px; }
 .positionlist .form-check-label {color:#E7BF3A  !important; font-size:small;  }
-.positionlist .form-check-input { margin:0px 20px 0px 20px; font-size:small; }
+.positionlist .form-check-input { margin:0px 2px 0px 2px; font-size:small; }
 
 .positionlist .row { 
     display: flex;
-    flex-wrap: nowrap; /* Ensure they stay on the same row, no wrapping */
+    
 }
 
 .positionlist .form-check {
     display: flex;
     align-items: center; /* Ensures vertical alignment */
     gap: 0px; /* Controls the space between checkbox and label */
+    padding: 1%;
+    margin: 0;
+}
+
+.cardbook {
+    background-color: #ffffffbe;
+}
+
+.cardbookcards{
+
 }

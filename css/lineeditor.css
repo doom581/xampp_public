@@ -5,9 +5,12 @@
 
 
 .linetabs .blockcontainer{padding:0px 10px;}
-.linetabs .linesection{position:relative;border:1px solid #cccccc;float:left;padding:5px 5px 5px 5px;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);}
+.linetabs .linesection{position:relative;border:1px solid #cccccc;float:left;padding:5px 5px 5px 5px;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); background-color: aliceblue !important;}
 .linetabs .linesection + .linesection{margin-left:10px;}
-
+.linesection .card-header {
+    background-color: #040407cb;
+    color: #E7BF3A;
+}
 
 .linetabs .strats{float:left;}
 .linetabs .stratlabel{float:left; margin-top:3px;}
@@ -16,13 +19,22 @@
 .linetabs .timevalue{float:left;}
 .linetabs .startinggoalie{margin-bottom:10px;}
 
-
+.positionlabel {
+    /*padding: 0;
+    color:#E7BF3A;*/
+    display: inline-block;
+    background-color: #E7BF3A !important;
+}
+.positionname{
+    display: inline-block;
+}
 
 .linetabs .tabcontainer{
   /*  background-color:#0000009d !important ;*/
+  padding: 0%;
 
 }
-.linetabs {background-color:#ffffff00 !important; }
+.linetabs {/*background-color:#d4c430dc !important;*/}
 
 
 #lineeditor  #tabs .linesection{
@@ -34,10 +46,10 @@
     border-radius: 15px;*/
 }
 #lineeditor  #tabs .linesection input[type=button]{padding:0px 0px;text-align:center;margin-top:3px;}
-#lineeditor  #tabs .linesection input.textname {width:80%;border:1px solid #e8e8e8;padding:1px 5px;}
+
 
 #lineeditor  .playerlist{margin:2px; padding:2px;}
-#lineeditor  .playerlist select{width:100%; -webkit-appearance: menulist-textfield;border-width:0px;}
+
 #lineeditor  .playerlist li{ border:1px thin #f5f5ff2f; align-content: start;  }
 #lineeditor  .playerlist li:active {background-color: #E7BF3A ;}
 

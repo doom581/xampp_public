@@ -46,7 +46,8 @@
         <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js\"></script>
         
         <link href=\"css/lhsqc.css\" rel=\"stylesheet\" type=\"text/css\" /> 
-        <script src=\"js/lhsqc.js\"    type=\"text/javascript\"></script>"; 
+        <script src=\"js/lhsqc_new.js\"    type=\"text/javascript\"></script>";
+        //<script src=\"LHSQC.js\"    type=\"text/javascript\"></script>";  
 
 
 
@@ -81,8 +82,8 @@
 		$db->close();
 
 
-		// Display the default footer.
+		 include ("Footer.php");// Display the default footer.
 		api_layout_footer();
-        include ("Footer.php");
+       
 	}
 ?>

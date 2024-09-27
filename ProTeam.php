@@ -1,4 +1,5 @@
 <?php include "Header.php";
+
 /*
 Syntax to call this webpage should be ProTeam.php?Team=2 where only the number change and it's based on the Tean Number Field.
 SubMenu : 0 = Home / 1 = Roster / 2 = Scoring / 3 = PlayerInfo / 4 = Lines / 5 = Team Stats / 6 = Schedule / 7 =Finance / 8 = Depth / 9 =History / 10 = Last Transactions / 11 = CareerStat  / 12 = InjurySuspension / 13 = News
@@ -296,7 +297,7 @@ if (empty($LeagueGeneral) == false){If ($LeagueGeneral['OffSeason'] == "True"){e
 #tablesorter_colSelect6:checked ~ #tablesorter_ColumnSelector6 {display: block;}
 #tablesorter_colSelect8P:checked + label {background: #5797d7;  border-color: #555;}
 #tablesorter_colSelect8P:checked ~ #tablesorter_ColumnSelector8P {display: block;z-index:10;}
-@media screen and (max-width: 992px) {
+/*@media screen and (max-width: 992px) {
 .STHSWarning {display:block;}
 .STHSPHPTeamStatDepthChart_Table td:nth-child(3){display:none;}
 .STHSPHPTeam_HomeTable td:nth-child(2){display:none;}
@@ -304,13 +305,22 @@ if (empty($LeagueGeneral) == false){If ($LeagueGeneral['OffSeason'] == "True"){e
 }@media screen and (max-width: 890px) {
 .STHSPHPTeamStatDepthChart_Table td:nth-child(2){display:none;}
 #STHSPHPTeamStat_SubHeader {display:none;}
-}
+}*/
 .tabmain-links a{font-size:18px;}
 </style>
+<script>
+
+    
+</script>
 <script>function toggleDiv(divId) {$("#"+divId).toggle();}</script>
 </head><body>
-<?php include "Menu.php";?>
-<br />
+
+
+<header>
+    
+<?php include "Menu.php"; ?>	
+  <div class="container p-2">  
+
 
 <?php 
 If ($TeamInfo <> Null){
@@ -374,7 +384,7 @@ if ($LeagueOutputOption != Null){if ($LeagueOutputOption['ShowWebClientInDymanic
 	echo "<li><a class=\"tabmenuhome\" href=\"WebClientLines.php?League=Pro&TeamID=" . $Team . "\">" . $TeamLang['WebLinesEditor'] . "</a></li>\n";
 }}?>
 </ul>
-<div style="border-radius:1px;box-shadow:-1px 1px 1px rgba(0,0,0,0.15);border-style: solid;border-color: #dedede">
+<div style="border-radius:1px;box-shadow:-1px 1px 1px rgba(0,0,0,0.15);border-style: solid;border-color: #dedede" class="cardbook">
 
 <div class="tabmain<?php if($SubMenu ==0){echo " active";}?>" id="tabmain0">
 <?php If (isset($PerformanceMonitorStart)){echo "<script>console.log(\"STHS 0 Page PHP Performance : " . (microtime(true)-$PerformanceMonitorStart) . "\"); </script>";}?>
@@ -2149,6 +2159,11 @@ if ($TeamCareerSumPlayoffOnly != Null){
 </div>
 </div>
 
+
+	</div>
+</header>
+
+
 <script>
 $(function(){
   $.tablesorter.addWidget({ id: "numbering",format: function(table) {var c = table.config;$("tr:visible", table.tBodies[0]).each(function(i) {$(this).find('td').eq(0).text(i + 1);});}});
@@ -2317,10 +2332,6 @@ function Game5() {
     if (x.style.display === 'none') {x.style.display = 'table';} else {x.style.display = 'none';}
 }
 </script>
-
-
-
-
 
 
 <?php include "Footer.php";?>

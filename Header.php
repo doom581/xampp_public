@@ -35,10 +35,3 @@
     <link href="css/lhsqc.css" rel="stylesheet" type="text/css" />
   
     <script src="js/lhsqc.js"    type="text/javascript"></script>
-
-    
-
-
-
-
-                    

@@ -1,12 +1,8 @@
-
-
-
 <?php
 
 $MenuFreeAgentYear = (integer)1;
 $MenuTeamTeamID = (integer)0;
 $MenuQueryOK = (boolean)False;
-
 
 If (file_exists($DatabaseFile) == false){
 	Goto STHSErrorMenu;
@@ -131,7 +127,7 @@ if ($MenuQueryOK == True) {
     $menuTeamsItems .= "<li><a href=\"ProTeam.php?Team=22\"><img src=\"/images/5.png\">Philadelphia</a></li>";
     $menuTeamsItems .= "<li><a href=\"ProTeam.php?Team=24\"><img src=\"/images/1.png\">Pittsburgh</a></li>";
     $menuTeamsItems .= "<li><a href=\"ProTeam.php?Team=30\"><img src=\"/images/9.png\">Washington</a></li>";
-    $menuTeamsItems .= "</ul> </li>";
+    $menuTeamsItems .= "</ul></li>";
     $menuTeamsItems .= "<li><a href=\"#\">Central</a><ul>";
     $menuTeamsItems .= "<li><a href=\"ProTeam.php?Team=7\"><img src=\"/images/18.png\">Chicago</a></li>";
     $menuTeamsItems .= "<li><a href=\"ProTeam.php?Team=8\"><img src=\"/images/25.png\">Colorado</a></li>";
@@ -206,11 +202,7 @@ if ($MenuQueryOK == True) {
             $menuMobileTeamsItems .= "<a href=\"ProTeam.php?Team=31\"><img src=\"/images/32.png\">VGK</a>";
         $menuMobileTeamsItems .= "</div>";
 
-    $menuMobileTeamsItems .= "</div>";
-
-    
-
-    
+    $menuMobileTeamsItems .= "</div>";  
 }
 ?>
 
@@ -222,7 +214,7 @@ if ($MenuQueryOK == True) {
         <li class="active"><a href="index.php">Home</a></li>
         <li><a href="#">Stats</a><ul> <?php echo $menuStatsItems; ?> </ul></li>
         <li><a href="#">Trades</a><ul> <?php echo $menuTradesItems; ?> </ul></li>
-        <li><a href="ProTeam.php">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
+        <li><a href="ProTeam.php?TeamID=<?php echo $CookieTeamNumber ?>">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
         <li><a href="#">Coach's Corner</a><ul>
             <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Roster Editor</a></li>
             <li><a href="WebClientLines.php?TeamID=<?php echo $CookieTeamNumber ?>">Lines Editor</a></li>
@@ -261,7 +253,7 @@ if ($MenuQueryOK == True) {
         </ul>
         </li>
         <li><a href="Schedule.php">Schedule</a></li>
-        <li><a href="Standings.php">Standings</a></li>
+        <li><a href="Standing.php">Standing</a></li>
         <li><a href="Login.php">LOGIN</a></li>
     </ul>	
 

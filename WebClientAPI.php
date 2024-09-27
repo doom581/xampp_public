@@ -140,13 +140,13 @@ function load_api_html(){
 
             <div class='row'>
                 <div class='col'>
-                    <div class='form-check'>
+                    <div class='form-check '>
                         <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posC" name="position" class="position form-check-input" checked>
                         <label class="form-check-label " for="posC">C</label>
                     </div>
                 </div>
                 <div class='col'>
-                    <div class='form-check'>
+                    <div class='form-check '>
                         <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posLW" name="position" class="position form-check-input" checked>
                         <label class="form-check-label inline" for="posLW">LW</label>
                     </div>
@@ -157,11 +157,6 @@ function load_api_html(){
                         <label class="form-check-label" for="posRW">RW</label>
                     </div>
                 </div>    
-            </div> 
-
-            <div class='row'>
-                <div class='col-2'>
-                </div>
                 <div class='col'>
                     <div class='form-check'>
                         <input onchange="update_position_list('<?= $elementName; ?>',<?= $byName; ?>,'<?= $display; ?>');" type="checkbox" id="posD" name="position" class="position form-check-input" checked>
@@ -174,8 +169,6 @@ function load_api_html(){
                         <label class="form-check-label" for="posG">G</label>
                     </div>
                 </div> 
-                <div class='col-2'>
-                </div>
             </div>
 
             <div class='row invisible'>  
@@ -315,27 +308,28 @@ function load_api_layout(){
 								?><script src="<?= $file ?>"></script><?php
 							}
 						endif;
-					}?>
+					}
+                    
+                    api_jquery_call_jquery();
+                    ?>
 				<?php
 					// Check for $id for rostereditor page. 
 					// If we are on the roster editor page, the body tage needs an onload function to validate the rosters at default.
 					// If so and a team is selected, create the onload attribute with the js_function_roster_validator to placein the body tag. 
 					if($id == "rostereditor" && $teamid > 0){  
-						api_jquery_call_jquery();
+						
 						$jsfunction = api_js_function_roster_validator($db,$teamid);
 						$onload = " onLoad=\"". $jsfunction ."\"";
 						// Add the jquery for draggable columns.
 						api_jquery_roster_editor_draggable($jsfunction);
 					}
-				?>
-				<?php
 					if($id == "lineeditor" && $teamid > 0 && $league){
-						api_jquery_call_jquery();
 						$jsfunction = api_js_function_line_validator($db);
 						$onload = " onLoad=\"". $jsfunction ."\"";
 						echo api_script_team_array($db,$teamid); 
 					}
-				if($headcode != ""){echo $headcode;}
+
+				    if($headcode != ""){echo $headcode;}
 				?>
                
 				<script src="js/scripts_labs.js"></script><!-- Load in the scripts needed from labs -->
@@ -883,7 +877,7 @@ function load_api_pageinfo(){
 								<?php  // Start the tabs for pages of lines.?>
 								<div class="linetabs">
 									<div id="tabs" class="linetabs">
-										<ul class=" nav nav-pills">
+										<ul class=" ">
 											<?php  // loop through the tab names creating clickable tabs. ?>
 											<?php  
 											$tablink = ($useServerURIInTabLink) ? $_SERVER["REQUEST_URI"] . "#tabs-" : "#tabs-";
@@ -895,10 +889,10 @@ function load_api_pageinfo(){
 												}
 												if($displaytab){
                                                     if($count) {?>
-													<li class="tabitem"><a data-toggle="pill" href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
+													<li class="tabitem"><a  href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
                                                     }else {
                                                         ?>
-													<li class="active tabitem"><a data-toggle="pill" href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
+													<li class="active tabitem"><a href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
                                                     }
 												}
 											}?>	
@@ -1198,10 +1192,13 @@ function load_api_pageinfo(){
 	function api_make_blocks($row,$blocks,$positions,$strategy,$i,$availableplayers,$cpfields,$league){
 		$bcount = 0;
 		foreach($blocks[$i] AS $bid=>$block){?>
-			<div class="linesection card id<?= api_MakeCSSClass($i)?> id<?= api_MakeCSSClass($bid)?>  tab-pane">
+			<div class="linesection card id<?= api_MakeCSSClass($i)?> id<?= api_MakeCSSClass($bid)?> ">
 				<div class="card-header no-border paleText fs-6"><?= $block ?></div>
 				<div class="blockcontainer row">
-					<div class="positionwrapper col">
+					
+                
+                
+                    <div class="positionwrapper row p-1 m-1">
 						<?php 	// Depending on which page you are on sets up how many blocks are needed.
 							// If its anything but 5vs5
 							if($i == "PP" || $i == "PK4" || $i == "4VS4" || $i == "PK3"){
@@ -1227,15 +1224,15 @@ function load_api_pageinfo(){
 							}?>
 						<?php foreach($posit AS $pid=>$pos){?>
 							<div class="positionline input-group">
-                                <span class="input-group-text paleText positionlabel"><?= $pos?></span>
-								<div class="positionname">
-									<?php  $row[$field . $pid] = (isset($availableplayers[api_MakeCSSClass($row[$field . $pid])])) ? $row[$field . $pid]: "";?>
-									<?= "<input id=\"". $field . $pid ."\" onclick=\"ChangePlayer('". $field . $pid ."','". $league ."',".$cpfields.");\" class=\"textname form-control\" readonly type=\"text\" name=\"txtLine[". $field . $pid ."]\" value=\"".  $row[$field . $pid] ."\">";?>
-                                </div>
+                                <span class="input-group-text positionlabel"  id="positionlabel"><?= $pos?></span>
+                                <?php  $row[$field . $pid] = (isset($availableplayers[api_MakeCSSClass($row[$field . $pid])])) ? $row[$field . $pid]: "";?>
+                                <?= "<input id=\"". $field . $pid ."\" onclick=\"ChangePlayer('". $field . $pid ."','". $league ."',".$cpfields.");\" class=\"textname positionname form-control\" readonly type=\"text\" placeholder=\".\" aria-label=\"..\" aria-describedby=\"positionlabel\" name=\"txtLine[". $field . $pid ."]\" value=\"".  $row[$field . $pid] ."\">";?>
 							</div>
 						<?php }?>
 					</div><!-- end positionwrapper-->
-					<div class="sliders col">
+					
+                    <div class="sliders row">
+                        <div class="col">
 						<div class="strategywrapper">
 							<div class="strategy">
 								<?php foreach($strategy AS $sid=>$strat){?>
@@ -1256,7 +1253,10 @@ function load_api_pageinfo(){
 								</div>
 							</div>
 						</div><!-- end timerwrapper-->
+                        </div>
 					</div><!-- end sliders-->
+
+
 				</div><!-- end blockcontainer-->
 			</div><!-- end linesection <?= api_MakeCSSClass($i)?> <?= api_MakeCSSClass($bid)?>--><?php 
 		}
