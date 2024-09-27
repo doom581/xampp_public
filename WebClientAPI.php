@@ -215,9 +215,9 @@ function load_api_html(){
 function load_api_jquery(){
 	function api_jquery_call_jquery(){
 		?>
-		<script src="https://code.jquery.com/jquery-1.9.1.js"></script> <!-- Load in JQuery -->
-		<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script><!-- Load in JQuery UI -->
-		<script src="js/jquery.ui.touch-punch.min.js"></script><!-- Load in JQuery Needed for mobile devices -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha256-Fb0zP4jE3JHqu+IBB9YktLcSjI1Zc6J2b6gTjB0LpoM=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 		<script src="js/jquery.labs.js"></script><!-- Load in JQuery from Labs -->
 		<script>
 		/* CSS Menu */
@@ -346,7 +346,8 @@ function load_api_layout(){
 	}
 
 	function api_layout_footer(){
-		?></body></html><?php
+		?>
+        </body></html><?php
 	}
 
 	function api_script_team_array($db,$teamid){
@@ -659,6 +660,41 @@ function load_api_pageinfo(){
 			</div><!-- end pagewrapper -->
 		</div><!-- end id rostereditor --><?php
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	function api_pageinfo_editor_lines($db,$teamid=0,$league=false,$showHeader=true,$useServerURIInTabLink=false){	
 		?><div id="lineeditor"><?php
 		// $db = sqlite DB
@@ -770,21 +806,21 @@ function load_api_pageinfo(){
 
 		// Get the team selection form from the html API if needed ?>
 			
-				<div class="pagewrapper pagewrapperlineeditor"><?php 
+				<div class="container pagewrapper pagewrapperlineeditor"><?php 
 					
-					if($showHeader){
-						$row = ($teamid > 0) ? api_dbresult_teamname($db,$teamid,$league) : array();
-						$teamname = (!empty($row)) ? $row["FullTeamName"] . " - " : "";
-						?>
-						<h1><?= $teamname ?>Line Editor - <a href="WebClientRoster.php?TeamID=<?=$teamid;?>">Roster Editor</a></h1>
-						<?php
-					}
 					if(api_validate_teamid($db,$teamid)){?>
-						<form id="submissionform" class="STHSWebClient_Form" name="frmEditLines" method="POST" onload="checkCompleteLines();">
+						
+                        <div class="row">
+                            <div class="col">
+                        
+                        
+                        <form id="submissionform" class="STHSWebClient_Form " name="frmEditLines" method="POST" onload="checkCompleteLines();">
 							<?php $buttontext = (api_has_saved_lines($db,$teamid,$league)) ? "Re-Save Lines" : "Save Lines"; ?>
-							<div class="Save">
-								<input id="autolines" onClick="javascript:auto_lines('<?= $league ?>',<?=$cpfields?>);" type="button" name="btnAutoLines" value="Auto Lines">
-								<input id="linesubmit" type="submit" value="<?= $buttontext?>" name="sbtUpdateLines" form="submissionform" />
+							<div class="Save row justify-content-center pt-1">
+                                <div class="col"></div>
+								<div class="col"><input id="autolines" onClick="javascript:auto_lines('<?= $league ?>',<?=$cpfields?>);" type="button" name="btnAutoLines" value="Auto Lines" class="btn btn-info"></div>
+								<div class="col"><input id="linesubmit" type="submit" value="<?= $buttontext?>" name="sbtUpdateLines" form="submissionform" class=" btn btn-warning" /> </div>
+                                <div class="col"></div>
 								<?php if(api_security_isLogged($teamid)){ api_html_logout_button(); } ?>
 							</div>
 							<?php
@@ -792,9 +828,26 @@ function load_api_pageinfo(){
 							if($teamid > 0 && $league){
 								// Create a next 10 games array to see the games both Pro and Farm will play.
 								$nextgames = api_get_nextgames($db,$teamid);
-								?><h3 class="withsave"><?= api_make_nextgame($nextgames[1],$league);?></h3>
+								?><h3 class="withsave paleText"><?= api_make_nextgame($nextgames[1],$league);?></h3>
 
-								<?php if($bannertext != ""){ ?><div class="confirm"><?= $bannertext?></div><?php }
+
+								<?php if($bannertext != ""){ ?>
+                                <div class="confirm"><?= $bannertext?></div>
+                                    <script>
+                                        // Hide the confirm banner after 5 seconds
+                                        setTimeout(() => {
+                                            const banner = document.querySelector('.confirm');
+                                            if (banner) banner.style.display = 'none'; // Hides the banner
+                                            
+                                        }, 5000);
+
+                                        // Optionally hide on user interaction
+                                        document.addEventListener('click', () => {
+                                            const banner = document.querySelector('.confirm');
+                                            if (banner) banner.style.display = 'none'; // Hides the banner
+                                        });
+                                    </script>
+                                <?php }
 								// Error block for updating feedback to the user.
 								?><div id="errors"></div><?php 
 								if($league == "Pro"){
@@ -829,8 +882,8 @@ function load_api_pageinfo(){
 								
 								<?php  // Start the tabs for pages of lines.?>
 								<div class="linetabs">
-									<div id="tabs">
-										<ul class="positiontabs">
+									<div id="tabs" class="linetabs">
+										<ul class=" nav nav-pills">
 											<?php  // loop through the tab names creating clickable tabs. ?>
 											<?php  
 											$tablink = ($useServerURIInTabLink) ? $_SERVER["REQUEST_URI"] . "#tabs-" : "#tabs-";
@@ -840,12 +893,20 @@ function load_api_pageinfo(){
 												}elseif($i == "OT" && $customOTlines){$displaytab = true;
 												}else{$displaytab = false;
 												}
-												if($displaytab){?>
-													<li class="tabitem"><a href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
+												if($displaytab){
+                                                    if($count) {?>
+													<li class="tabitem"><a data-toggle="pill" href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
+                                                    }else {
+                                                        ?>
+													<li class="active tabitem"><a data-toggle="pill" href="<?= $tablink . ++$count?>"><?= $t?></a></li><?php 
+                                                    }
 												}
 											}?>	
 										</ul>
 										<?php $count = 0;?>
+
+
+
 										<?php 
 											// Loop through the tabs info making the lines pages.
 											foreach($tabs AS $i=>$t){
@@ -855,14 +916,14 @@ function load_api_pageinfo(){
 												}else{$displaytab = false;
 												}
 												if($displaytab){
-													?><div id="tabs-<?= ++$count ?>" class="tabcontainer"><?php 
+													?><div id="tabs-<?= ++$count ?>" class="tabcontainer vh-100"><?php 
 														if($i == "Forward" || $i == "Defense" || $i == "PP" || $i == "PK4" || $i == "4VS4" || $i == "PK3"){	
 															// Each of the if'ed statements above have the same kind of info. 
 															// display the blocks based on which tabbed page you are on.
 															api_make_blocks($row,$blocks,$positions,$strategy,$i,$availableplayers,$cpfields,$league);
 														}elseif($i == "Others"){?>
 															<?php // Start with the goalies. ?>
-															<div class="linesection id<?= api_MakeCSSClass($i)?> goalies">
+															<div class="linesection id<?= api_MakeCSSClass($i)?> goalies tab-pane">
 																<?php 
 																	$GoalerInGame = api_GoalerInGame($db,$league);																
 																	foreach(array(1=>"Starting Goalie",2=>"Backup Goalie",3=>"Third Goalie") AS $gid=>$g){?>
@@ -873,7 +934,9 @@ function load_api_pageinfo(){
 																		</div><?php 
 																	}
 																?>
-															</div><!-- end linesection <?= api_MakeCSSClass($i)?> goalies-->
+															</div>
+                                                          
+                                                            <!-- end linesection <?= api_MakeCSSClass($i)?> goalies-->
 															<?php 
 															// Get the other page fields needed for the blocks.
 															$field = api_get_line_arrays("otherfield");
@@ -918,7 +981,7 @@ function load_api_pageinfo(){
 															<?php
 														}else if($i == "OT"){ 
 															foreach(array(10=>"Forward",5=>"Defense") AS $i=>$p){
-															?><div class="linesection idot ot<?= $p?>">
+															?><div class="linesection card idot ot<?= $p?>">
 																<h4><?= $p?></h4>
 																<div class="blockcontainer">
 																	<?php
@@ -1022,8 +1085,12 @@ function load_api_pageinfo(){
 								</div><!-- end linetabs--><?php 
 							}// end if a team is selected?>
 						</form>
+                    
 
-						<?php
+                        </div>
+                            <div class="col-4">
+                           
+                        <?php
 							// Get all the players and goalies of the team who are dressed
 							$sql = api_sql_players_base("Player",$isPro);
 							$sql .= "WHERE Team = " . $teamid . " AND Status1 = " . $status1 . " ";
@@ -1033,10 +1100,10 @@ function load_api_pageinfo(){
 							$sql .= "ORDER BY Name ASC, Overall DESC ";
 							?>
 							
-							<div class="playerlist">
+							<div class="playerlist justify-content-start">
 								<?php api_html_checkboxes_positionlist("sltPlayerList","true","list-item",null,null); ?>
 								<form name="frmPlayerList">
-									<ul class="playerselect">
+									<ul class="playerselect list-group">
 									<?php 	// Loop through the players and add to the select list.
 									$oRS = $db->query($sql);
 									$first = true;
@@ -1046,9 +1113,9 @@ function load_api_pageinfo(){
 										// Separate Name and number with a pipe '|' to split in the javascript.
 										$values = api_fields_input_values($row);
 										?>
-										<li id="line1_<?= api_MakeCSSClass($row["Name"])?>" class="option">
+										<li id="line1_<?= api_MakeCSSClass($row["Name"])?>" class="option list-group-item">
 											<input name="sltPlayerList" type="radio" id="a<?= api_MakeCSSClass($row["Name"]); ?>" <?= $s;?> value="<?= $values; ?>">
-											<label for="a<?= api_MakeCSSClass($row["Name"]); ?>"><?= $row["Name"];?> - <?= $row["PositionString"];?> <span class="smalllist">(<?= $row["Overall"]; ?>OV)</span></label>
+											<label for="a<?= api_MakeCSSClass($row["Name"]); ?>"><?= $row["Name"];?> - <?= $row["PositionString"];?> <span class=""><small>(<?= $row["Overall"]; ?> OV)</small></span></label>
 										</li><?php 
 									}?>
 									<li class="option">
@@ -1057,7 +1124,15 @@ function load_api_pageinfo(){
 									</li>
 									</ul>
 								</form><!-- end frmPlayerList-->
-							</div><!-- end playerlist--><?php 
+							</div><!-- end playerlist-->
+
+
+                            </div>
+                        </div>
+
+
+
+		<?php 
 					}elseif(!api_validate_teamid($db,$teamid) && isset($_REQUEST["TeamID"])){
 						// If there is not a valid Teamid, let them know.
 						?><div class="doesntexits">The team you are looking for does not exist.</div><?php
@@ -1065,13 +1140,68 @@ function load_api_pageinfo(){
 				</div><!-- end pagewrapper-->
 			</div><!-- end id lineeditor--><?php 
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	function api_make_blocks($row,$blocks,$positions,$strategy,$i,$availableplayers,$cpfields,$league){
 		$bcount = 0;
 		foreach($blocks[$i] AS $bid=>$block){?>
-			<div class="linesection id<?= api_MakeCSSClass($i)?> id<?= api_MakeCSSClass($bid)?>">
-				<h4><?= $block ?></h4>
-				<div class="blockcontainer">
-					<div class="positionwrapper">
+			<div class="linesection card id<?= api_MakeCSSClass($i)?> id<?= api_MakeCSSClass($bid)?>  tab-pane">
+				<div class="card-header no-border paleText fs-6"><?= $block ?></div>
+				<div class="blockcontainer row">
+					<div class="positionwrapper col">
 						<?php 	// Depending on which page you are on sets up how many blocks are needed.
 							// If its anything but 5vs5
 							if($i == "PP" || $i == "PK4" || $i == "4VS4" || $i == "PK3"){
@@ -1096,16 +1226,16 @@ function load_api_pageinfo(){
 								$posit = $positions[$i];
 							}?>
 						<?php foreach($posit AS $pid=>$pos){?>
-							<div class="positionline">
-								<div class="positionlabel"><?= $pos?></div>
+							<div class="positionline input-group">
+                                <span class="input-group-text paleText positionlabel"><?= $pos?></span>
 								<div class="positionname">
 									<?php  $row[$field . $pid] = (isset($availableplayers[api_MakeCSSClass($row[$field . $pid])])) ? $row[$field . $pid]: "";?>
-									<?= "<input id=\"". $field . $pid ."\" onclick=\"ChangePlayer('". $field . $pid ."','". $league ."',".$cpfields.");\" class=\"textname\" readonly type=\"text\" name=\"txtLine[". $field . $pid ."]\" value=\"".  $row[$field . $pid] ."\">";?>
-								</div>
+									<?= "<input id=\"". $field . $pid ."\" onclick=\"ChangePlayer('". $field . $pid ."','". $league ."',".$cpfields.");\" class=\"textname form-control\" readonly type=\"text\" name=\"txtLine[". $field . $pid ."]\" value=\"".  $row[$field . $pid] ."\">";?>
+                                </div>
 							</div>
 						<?php }?>
 					</div><!-- end positionwrapper-->
-					<div class="sliders">
+					<div class="sliders col">
 						<div class="strategywrapper">
 							<div class="strategy">
 								<?php foreach($strategy AS $sid=>$strat){?>

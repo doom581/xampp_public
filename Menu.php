@@ -223,7 +223,11 @@ if ($MenuQueryOK == True) {
         <li><a href="#">Stats</a><ul> <?php echo $menuStatsItems; ?> </ul></li>
         <li><a href="#">Trades</a><ul> <?php echo $menuTradesItems; ?> </ul></li>
         <li><a href="ProTeam.php">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
-        <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Coach's Corner</a></li>
+        <li><a href="#">Coach's Corner</a><ul>
+            <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Roster Editor</a></li>
+            <li><a href="WebClientLines.php?TeamID=<?php echo $CookieTeamNumber ?>">Lines Editor</a></li>
+        </ul></li>
+    
         <li><a href="Schedule.php">Schedule</a></li>
         <li><a href="Standing.php">Standing</a></li>
 
@@ -251,7 +255,11 @@ if ($MenuQueryOK == True) {
         <li><div> Stats  <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuStatsItems; ?> </ul></li>
         <li><div> Trades <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuTradesItems; ?> </ul></li>
         <li><div> Teams  <i class="fa fa-chevron-right"></i></div><ul> <?php echo $menuMobileTeamsItems; ?> </ul></li>
-        <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Coach's Corner </a></li>
+        <li><div> Coach's Corner  <i class="fa fa-chevron-right"></i></div><ul>
+                                <a class=" " href=WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Roster Editor</a>
+                                <a class=" " href="WebClientLines.php?TeamID=<?php echo $CookieTeamNumber ?>">Lines Editor</a>
+        </ul>
+        </li>
         <li><a href="Schedule.php">Schedule</a></li>
         <li><a href="Standings.php">Standings</a></li>
         <li><a href="Login.php">LOGIN</a></li>

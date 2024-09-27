@@ -1,52 +1,11 @@
-h3.withsave{/*overflow:hidden;*/}
-
-.error, .linesincomplete{color:#D8000C;background-color: #FFBABA;font-size:large;margin-bottom:5px;padding:5px;}
-.errorwrapper{padding:10px;overflow:hidden;}
-.erroritem{font-size:13px;float:left;margin-right:15px;}
-.rostercomplete,.linescomplete{color: #4F8A10;background-color: #DFF2BF;font-size:large;margin-bottom:5px;padding:2px; margin-top: 15px;}
-.confirm{color: #4F8A10;background-color: #DFF2BF;font-size:x-large;margin-bottom:2px;padding:2px;}
 .instructions{clear: left;background: #ffedde;color: #524133;margin: 0 0 20px 0;padding: 10px;border: 2px solid #ebcdb6;border-radius: 5px;}
 
-.Save{padding-bottom:10px;  text-align:center; }
-.Save input {color:#333; }
 
 .ui-tabs{position:static;}
 
 
 
-.positionlist { 
-    border-bottom:1px solid #999999;
-    border-top:1px solid #999999; 
-    padding:3px;
-}
-.positionlist label{padding-left: 5px; font-size:small;  }
-.positionlist option{padding:2px 0px 0px 2px; }
-.positionlist .form-check-label {color:#E7BF3A  !important; font-size:small;  }
-.positionlist .form-check-input { margin:0px 20px 0px 20px; font-size:small; }
 
-.positionlist .row { 
-    display: flex;
-    flex-wrap: nowrap; /* Ensure they stay on the same row, no wrapping */
-}
-
-.positionlist .form-check {
-    display: flex;
-    align-items: center; /* Ensures vertical alignment */
-    gap: 0px; /* Controls the space between checkbox and label */
-}
-
-
-
-.btn-warning,
-.btn-warning:hover,
-.btn-warning:focus,
-.btn-warning:active {
-    background-color:#E7BF3A  !important;
-   /* border: 3px solid #221f42 !important;*/
-}
-
-
-.showMe {border: 1px dotted #2e7bdf;}
 
 
 #rostereditor  option{padding:2px 0px 0px 2px;}
@@ -101,7 +60,7 @@ h3.withsave{/*overflow:hidden;*/}
 
 
 
-#rostereditor .paleText {color:#cccccc !important;}
+
 #rostereditor p {color:#1b1b1b !important;}
 
 

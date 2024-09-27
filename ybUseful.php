@@ -14,6 +14,19 @@ function consoleLog(msg, phpArray) {
 
 
 
+let playersNames = <?php echo json_encode($playersNames); ?>;
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "Form submitted successfully";
@@ -27,3 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="text" name="test" value="testValue">
     <input type="submit" name="submit" value="Submit">
 </form>
+
+
+

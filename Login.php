@@ -156,7 +156,7 @@ if (!file_exists($DatabaseFile)) {
                     //ob_flush();
                    // flush();                
                     // Perform redirect after cookie is set and headers are flushed
-                    header("Location: /WebClientRoster.php?Team" . $CookieTeamNumber);
+                    header("Location: /WebClientRoster.php?TeamID=" . $CookieTeamNumber);
                     exit();  // Ensure no further code is executed after the redirect
                 }			
 			               
@@ -252,7 +252,7 @@ echo "<title>" . $LeagueName . " - " . $TopMenuLang['Login'] . "</title>";
                 <label class="form-label" for="form2Example2"><strong>Password</strong></label>
             </div>
 
-            <!-- Remember me checkbox -->
+            <!-- Remember me checkbox 
             <div class="row mb-4">
                 <div class="col d-flex justify-content-center">
                     <div class="form-check">
@@ -263,7 +263,7 @@ echo "<title>" . $LeagueName . " - " . $TopMenuLang['Login'] . "</title>";
                 <div class="col">
                     <a href="#!">Forgot password?</a>
                 </div>
-            </div>
+            </div>-->
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4 SubmitButton">
