@@ -210,19 +210,28 @@ if ($MenuQueryOK == True) {
     <div class="logo">
         <a href="index.php"> <img src="images/lhsqc_logo_2.png" alt="LHSQC" class="header-logo"></a>
     </div>
+
+    
     <ul>
-        <li class="active"><a href="index.php">Home</a></li>
+    <li class="active"><a href="index.php">Home</a></li>
+        <li><a href="Todaygames.php">Scoreboard</a></li>
+        <li><a href="Schedule.php">Schedule</a></li>
+        <li><a href="Standing.php">Standing</a></li>
+        <li><a href="PlayersRoster.php">Players</a></li>
         <li><a href="#">Stats</a><ul> <?php echo $menuStatsItems; ?> </ul></li>
         <li><a href="#">Trades</a><ul> <?php echo $menuTradesItems; ?> </ul></li>
+    
+    
+    
+        
+
         <li><a href="ProTeam.php?TeamID=<?php echo $CookieTeamNumber ?>">Teams</a><ul class="team-list"> <?php echo $menuTeamsItems; ?> </ul></li>
         <li><a href="#">Coach's Corner</a><ul>
             <li><a href="WebClientRoster.php?TeamID=<?php echo $CookieTeamNumber ?>">Roster Editor</a></li>
             <li><a href="WebClientLines.php?TeamID=<?php echo $CookieTeamNumber ?>">Lines Editor</a></li>
         </ul></li>
     
-        <li><a href="Schedule.php">Schedule</a></li>
-        <li><a href="Standing.php">Standing</a></li>
-
+        
         <?php if (isset($_COOKIE[$Cookie_Name])): ?>
             <li><a href="Login.php?Logoff=STHS" class="button yellow-bg">LOGOUT</a></li>
         <?php else: ?>
