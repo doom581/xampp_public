@@ -78,18 +78,27 @@ STHSErrorIndex:
 
 <header>
     
-
+<?php include "components/GamesScroller.php"; ?>
+<div id=proBar><?php include "components/ProTeamsBar.php" ?></div>
 <?php include "Menu.php"; ?>	
   <div class="container">   
-<?php include "components/GamesScroller.php"; ?>	
+
     
        
-    <div class="clearfix header-content style="display:inline-block;">
-        <div class="row mt-2  mx-2 " >
+<div class="clearfix header-content" style="display:inline-block;">
+
+
+	
+
+	  
+	
+	
+	
+	<div class="row mt-2  mx-2 " >
             <div class="col-mb-6 "> <?php include "components/TopHeadlines.php"; ?> </div>
         </div>
 
-        <div id=proBar><?php include "components/ProTeamsBar.php" ?></div>
+       
 
         <div class="row mt-2  mx-2 row-cols-1 row-cols-md-2 row-cols-lg-3" >
             <div class="col-mb-6 "> <?php include "components/Top5.php"; ?> </div> 
@@ -101,8 +110,8 @@ STHSErrorIndex:
 
 
 
-<section class="sport-news">
-    <main class="mt-5 text-white" data-mdb-theme="dark"">
+<!--<section class="sport-news">
+    <main class="mt-5 text-white" data-mdb-theme="dark">
         <div class="container">
             <div class="STHSIndex_NewsTD">
                 <div class="STHSIndex_TheNews"><?php echo $LeagueName . $IndexLang['News'];?></div>
@@ -111,7 +120,7 @@ STHSErrorIndex:
             </div>
         </div>
     </main>
-</section>
+</section>-->
 
 </div>
 
